@@ -1,656 +1,986 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grass Nerds — 2026 Treatment Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #162f6e;
+    --lime: #c1d62f;
+    --lime-dim: #a8ba28;
+    --white: #ffffff;
+    --gray-50: #f8f9fa;
+    --gray-100: #f0f1f3;
+    --gray-200: #e2e4e8;
+    --gray-300: #c8ccd4;
+    --gray-600: #5a6070;
+    --gray-800: #2a2f3a;
+    --radius: 8px;
+    --shadow-sm: 0 1px 3px rgba(22,47,110,.08);
+    --shadow-md: 0 4px 12px rgba(22,47,110,.1);
+  }
 
-// ═══════════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════════
+  * { margin:0; padding:0; box-sizing:border-box; }
 
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(22,47,110,.25);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .header h1 span { color: var(--lime); }
+  .header-badge {
+    background: rgba(193,214,47,.15);
+    color: var(--lime);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* SEARCH */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 6px;
+    padding: 6px 12px;
+    width: 280px;
+    transition: all .2s;
+  }
+  .search-bar:focus-within {
+    background: rgba(255,255,255,.18);
+    border-color: var(--lime);
+  }
+  .search-bar input {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-family: inherit;
+    font-size: 13px;
+    width: 100%;
+    outline: none;
+  }
+  .search-bar input::placeholder { color: rgba(255,255,255,.5); }
+  .search-icon { color: rgba(255,255,255,.5); font-size: 14px; }
+
+  /* TABS */
+  .tab-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 68px;
+    z-index: 99;
+  }
+  .tab {
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all .15s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--navy); }
+  .tab.active {
+    color: var(--navy);
+    border-bottom-color: var(--lime);
+  }
+
+  /* MAIN */
+  .main { padding: 24px 32px 64px; max-width: 1200px; margin: 0 auto; }
+
+  /* SECTION */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .section-subtitle {
+    font-size: 14px;
+    color: var(--gray-600);
+    margin-bottom: 20px;
+  }
+
+  /* CARDS */
+  .round-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow .15s;
+  }
+  .round-card:hover { box-shadow: var(--shadow-md); }
+  .round-card.highlight { border-color: var(--lime); box-shadow: 0 0 0 2px rgba(193,214,47,.3); }
+
+  .round-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .round-header:hover { background: var(--gray-50); }
+
+  .round-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .round-badge {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+  }
+  .round-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-800);
+  }
+  .round-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .round-timing {
+    font-size: 12px;
+    color: var(--gray-600);
+    font-weight: 500;
+  }
+  .round-type {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .type-liquid { background: #e8f0fe; color: #1a56db; }
+  .type-granular { background: #fef3e2; color: #b45309; }
+  .type-seed { background: #e6f9e6; color: #16803c; }
+  .type-other { background: var(--gray-100); color: var(--gray-600); }
+
+  .chevron {
+    transition: transform .2s;
+    color: var(--gray-300);
+    font-size: 18px;
+  }
+  .round-card.open .chevron { transform: rotate(180deg); }
+
+  .round-body {
+    display: none;
+    padding: 0 20px 16px;
+    border-top: 1px solid var(--gray-100);
+  }
+  .round-card.open .round-body { display: block; }
+
+  /* CHEMICAL TABLE */
+  .chem-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+  .chem-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray-600);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .chem-table td {
+    font-size: 13px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+  }
+  .chem-table td:first-child {
+    font-weight: 600;
+    color: var(--navy);
+    padding-right: 24px;
+    width: 50%;
+  }
+  .chem-table td:nth-child(2) {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--gray-600);
+  }
+  .chem-table .spot-treat {
+    font-style: italic;
+    color: var(--gray-600);
+    font-weight: 500;
+  }
+
+  /* WHAT TO TELL THE CUSTOMER */
+  .customer-talk {
+    background: rgba(193,214,47,.08);
+    border-left: 3px solid var(--lime);
+    padding: 12px 16px;
+    margin-top: 14px;
+    border-radius: 0 6px 6px 0;
+  }
+  .customer-talk-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--lime-dim);
+    margin-bottom: 4px;
+  }
+  .customer-talk p {
+    font-size: 13px;
+    color: var(--gray-800);
+    line-height: 1.6;
+  }
+
+  /* SAFETY SECTION */
+  .safety-box {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .safety-box h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .safety-box p, .safety-box li {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--gray-800);
+  }
+  .safety-box ul { padding-left: 18px; margin-top: 8px; }
+  .safety-box li { margin-bottom: 6px; }
+  .safety-box .highlight-text {
+    background: rgba(193,214,47,.15);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  .callout-red {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 16px;
+    margin-top: 12px;
+  }
+  .callout-red p { color: #991b1b; }
+  .callout-red strong { color: #7f1d1d; }
+
+  /* QUICK REF GRID */
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .quick-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .quick-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .quick-card p, .quick-card li {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--gray-800);
+  }
+  .quick-card ul { padding-left: 16px; margin-top: 6px; }
+  .quick-card li { margin-bottom: 4px; }
+
+  /* NO RESULTS */
+  .no-results {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--gray-600);
+    font-size: 14px;
+    display: none;
+  }
+
+  /* PRINT */
+  @media print {
+    .header { position: static; }
+    .tab-bar { position: static; }
+    .round-body { display: block !important; }
+    .search-bar { display: none; }
+  }
+
+  @media (max-width: 640px) {
+    .header { padding: 16px; flex-direction: column; gap: 12px; }
+    .search-bar { width: 100%; }
+    .tab-bar { padding: 0 16px; }
+    .tab { padding: 12px 14px; font-size: 12px; }
+    .main { padding: 16px; }
+    .round-meta { gap: 8px; }
+    .round-timing { display: none; }
+    .quick-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Grass <span>Nerds</span> — 2026 Treatment Reference</h1>
+    <span class="header-badge">Inside Sales Quick-Ref</span>
+  </div>
+  <div class="search-bar">
+    <span class="search-icon">&#128269;</span>
+    <input type="text" id="search" placeholder="Search chemicals, rounds, grass types…" />
+  </div>
+</div>
+
+<div class="tab-bar" id="tabBar">
+  <div class="tab active" data-tab="safety">Safety &amp; Talk Tracks</div>
+  <div class="tab" data-tab="warm">Warm Season</div>
+  <div class="tab" data-tab="cool">Cool Season</div>
+  <div class="tab" data-tab="coastal">Coastal</div>
+  <div class="tab" data-tab="fungicide">Fungicide</div>
+  <div class="tab" data-tab="shrub">Shrub Care</div>
+  <div class="tab" data-tab="addons">Add-Ons &amp; Services</div>
+</div>
+
+<div class="main">
+  <div class="no-results" id="noResults">No matches found. Try a different search term.</div>
+
+  <!-- ===================== SAFETY & TALK TRACKS ===================== -->
+  <div class="section active" id="sec-safety">
+    <div class="section-title">Product Safety &amp; Customer Talk Tracks</div>
+    <div class="section-subtitle">Know this cold. If a customer asks "is this stuff safe?" you should never say "I'm not sure."</div>
+
+    <div class="safety-box">
+      <h3>The #1 Question: "Do you use Roundup / glyphosate?"</h3>
+      <p><strong>Answer: No.</strong> Grass Nerds does not use glyphosate (Roundup) in any lawn care treatment round. Our weed control products are <span class="highlight-text">selective herbicides</span> — they target weeds without harming the turf. Glyphosate is a <em>non-selective</em> herbicide that kills everything it touches, which is why we don't use it on lawns.</p>
+      <div class="callout-red">
+        <p><strong>Never say:</strong> "I'm not sure what we use" or "Everything is pet safe" without specifics. Customers who ask about glyphosate are informed — vague reassurance makes them trust you less, not more.</p>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:28px;">What We Actually Use — By Category</div>
+    <div class="section-subtitle">Learn the names so you can speak with confidence on calls.</div>
+
+    <div class="quick-grid">
+      <div class="quick-card">
+        <h4>&#127793; Pre-Emergent Herbicides</h4>
+        <p>These create a barrier in the soil to prevent weed seeds from germinating. They do NOT kill existing plants.</p>
+        <ul>
+          <li><strong>Prodiamine (Resolute 4FL)</strong> — Used in W1, C1, F2, fall granular rounds. Prevents crabgrass, goosegrass, and other annual weeds.</li>
+          <li><strong>Dithiopyr (Dimension 2EW)</strong> — Used in W2, C2, F3. Also prevents crabgrass; has some early post-emergent activity.</li>
+          <li><strong>0-0-7 w/ Prodiamine granular</strong> — Fall pre-emergent + potassium. Prevents winter annuals.</li>
+        </ul>
+      </div>
+      <div class="quick-card">
+        <h4>&#9888;&#65039; Post-Emergent Herbicides (Weed Killers)</h4>
+        <p>These kill weeds that are already growing. All are <strong>selective</strong> — they kill weeds but NOT the turf.</p>
+        <ul>
+          <li><strong>Escalade 2</strong> — 3-way broadleaf herbicide (W1, F1 spot, F7). Kills dandelions, clover, chickweed, etc.</li>
+          <li><strong>Change Up</strong> — Broadleaf + sedge control (W3, F2-F4, C1-C2, C6).</li>
+          <li><strong>Celsius</strong> — Warm-season safe post-emergent (W4-W6, C3-C5 spot treat). Excellent on tough weeds.</li>
+          <li><strong>Cool Power</strong> — Cool-weather broadleaf control (W7).</li>
+          <li><strong>Metsulfuron Methyl (MSM Turf)</strong> — Low-rate broadleaf control (W1, C1-C2).</li>
+          <li><strong>Negate</strong> — Targets grassy weeds in warm season turf (W2).</li>
+          <li><strong>Tribute Total</strong> — Broad-spectrum warm-season herbicide (W6 spot treat).</li>
+          <li><strong>Sim-Trol 4L</strong> — Used when temps are below 75°F (W1, W7, C6).</li>
+          <li><strong>Tenacity</strong> — Used in fescue for spot treatment (F6). Controls crabgrass + broadleaf.</li>
+          <li><strong>Pro Sedge / Sedgehammer</strong> — Targets nutsedge specifically (W3, W5 spot treat).</li>
+        </ul>
+      </div>
+      <div class="quick-card">
+        <h4>&#127807; Fertilizers</h4>
+        <p>Nutrition for the turf. These do NOT contain any herbicides unless specifically combined in a round.</p>
+        <ul>
+          <li><strong>25-0-12 w/ 85% poly</strong> — Slow-release N + K (W3).</li>
+          <li><strong>24-0-5 w/ 50% XCU</strong> — Controlled-release nitrogen + iron (W4).</li>
+          <li><strong>25-0-0 w/ Kelp</strong> — Liquid nitrogen + kelp extract (W5, F2-F3, F7, fungicide rounds).</li>
+          <li><strong>24-0-5 w/ Iron</strong> — Granular with iron for color (F1, F6, C3).</li>
+          <li><strong>8-14-4 w/ Lime</strong> — Phosphorus-heavy + lime for soil pH (F5).</li>
+          <li><strong>Harrell's Stress Relief 0-0-25</strong> — High potassium for stress tolerance (C6).</li>
+          <li><strong>Earth Max</strong> — Soil health / biostimulant (F4, C4, shrub rounds).</li>
+        </ul>
+      </div>
+      <div class="quick-card">
+        <h4>&#128138; Fungicides</h4>
+        <p>Preventative disease control. Applied on a schedule to stop fungus BEFORE it appears.</p>
+        <ul>
+          <li><strong>Propiconazole 41.8</strong> — Systemic fungicide (WFP1, WFP3, PF1, PF5).</li>
+          <li><strong>Xzemplar</strong> — Broad-spectrum fungicide (WFP2).</li>
+          <li><strong>Azoxystrobin (Azoxy)</strong> — Strobilurin fungicide (PF2-PF4).</li>
+          <li><strong>Activator Plus</strong> — Surfactant/adjuvant paired with fungicides.</li>
+          <li><strong>Enclave</strong> — Multi-site contact fungicide used in shrub care (SC1-SC5).</li>
+        </ul>
+      </div>
+      <div class="quick-card">
+        <h4>&#128027; Insecticides</h4>
+        <ul>
+          <li><strong>Bifenthrin</strong> — Used for grubs, armyworms, perimeter pest, flea/tick.</li>
+          <li><strong>Triple Crown / Merit</strong> — Systemic insecticide in shrub care (SC1, SC4).</li>
+          <li><strong>Altus</strong> — Low-impact insecticide for shrub pests (SC2-SC3).</li>
+        </ul>
+      </div>
+      <div class="quick-card">
+        <h4>&#128172; Adjuvants &amp; Surfactants</h4>
+        <p>These help products stick and absorb. They're what might feel "sticky" on bare feet if walked on too soon.</p>
+        <ul>
+          <li><strong>Non-Ionic Surfactant</strong> — Helps spray adhere to leaf surfaces. Used in nearly every liquid round.</li>
+          <li><strong>Sticker</strong> — Similar purpose, used in some fescue rounds.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="safety-box" style="margin-top: 24px;">
+      <h3>Re-Entry &amp; Safety Talk Track</h3>
+      <p>When a customer asks "Is it safe for my kids / pets?", here's what to say:</p>
+      <ul>
+        <li><strong>"All of our products are labeled safe for residential use, including around children and pets."</strong></li>
+        <li><strong>"We recommend staying off treated areas until the product dries — usually about 30 minutes to an hour depending on conditions."</strong></li>
+        <li><strong>"The surfactant we use can feel a little sticky underfoot if you walk on it before it dries, but once it's dry there's no issue."</strong></li>
+        <li><strong>"We do not use glyphosate or Roundup. Our weed control products are selective herbicides — they target weeds specifically and don't harm the grass or pose the concerns associated with glyphosate."</strong></li>
+        <li><strong>"If you'd like, I can send you a list of the specific products we use on your lawn so you can review them."</strong></li>
+      </ul>
+      <div class="callout-red" style="margin-top: 14px;">
+        <p><strong>Do NOT say:</strong> "It's all pet safe / kid safe" as a blanket statement without specifics. Informed customers hear that as a dodge. Name the product category (selective herbicide, pre-emergent, etc.) and the dry-time guideline. Specificity = trust.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== WARM SEASON ===================== -->
+  <div class="section" id="sec-warm">
+    <div class="section-title">Warm Season Program — Bermuda &amp; Zoysia</div>
+    <div class="section-subtitle">7 rounds · January through December</div>
+    <div id="warm-rounds"></div>
+  </div>
+
+  <!-- ===================== COOL SEASON ===================== -->
+  <div class="section" id="sec-cool">
+    <div class="section-title">Cool Season Program — Fescue</div>
+    <div class="section-subtitle">7 rounds · January through December</div>
+    <div id="cool-rounds"></div>
+  </div>
+
+  <!-- ===================== COASTAL ===================== -->
+  <div class="section" id="sec-coastal">
+    <div class="section-title">Coastal Program — Centipede &amp; St. Augustine</div>
+    <div class="section-subtitle">6 rounds · March through November</div>
+    <div id="coastal-rounds"></div>
+  </div>
+
+  <!-- ===================== FUNGICIDE ===================== -->
+  <div class="section" id="sec-fungicide">
+    <div class="section-title">Fungicide Programs</div>
+    <div class="section-subtitle">Preventative disease control for warm season &amp; fescue</div>
+    <div id="fungicide-rounds"></div>
+  </div>
+
+  <!-- ===================== SHRUB CARE ===================== -->
+  <div class="section" id="sec-shrub">
+    <div class="section-title">Shrub Care Program</div>
+    <div class="section-subtitle">5 rounds · March through November · Deep root injection + foliar sprays</div>
+    <div id="shrub-rounds"></div>
+  </div>
+
+  <!-- ===================== ADD-ONS ===================== -->
+  <div class="section" id="sec-addons">
+    <div class="section-title">Add-On Services</div>
+    <div class="section-subtitle">Additional services beyond the core treatment programs</div>
+    <div class="quick-grid" id="addon-cards">
+      <div class="quick-card" data-searchable="soil sample test analysis nutrients pH">
+        <h4>&#129516; Soil Sample</h4>
+        <p><strong>When:</strong> Anytime, once annually</p>
+        <p><strong>What:</strong> Samples from 4–6 spots, sent to lab. Tells us what nutrients the soil has, what's missing, and pH balance.</p>
+        <p><strong>Customer value:</strong> "This lets us build a custom plan instead of guessing. Better soil = thicker grass, better color, fewer problems."</p>
+      </div>
+      <div class="quick-card" data-searchable="grub armyworm insecticide bifenthrin larvae prevention">
+        <h4>&#128027; Grub &amp; Armyworm Prevention</h4>
+        <p><strong>When:</strong> May–October (1 application)</p>
+        <p><strong>Type:</strong> Liquid insecticide</p>
+        <p><strong>What:</strong> Targets grubs and armyworms at the larva stage before they hatch and feed in fall.</p>
+      </div>
+      <div class="quick-card" data-searchable="core aeration bermuda zoysia centipede st augustine compaction roots">
+        <h4>&#127793; Core Aeration (Warm Season)</h4>
+        <p><strong>When:</strong> June–August</p>
+        <p><strong>What:</strong> 2–4" plugs pulled to loosen compacted soil and circulate nutrients deeper. Leave plugs on lawn.</p>
+        <p><strong>Customer value:</strong> "This lets water, air, and nutrients reach the roots. Stronger roots = thicker, healthier turf."</p>
+      </div>
+      <div class="quick-card" data-searchable="core aeration overseeding fescue seed fall">
+        <h4>&#127793; Core Aeration + Overseeding (Fescue)</h4>
+        <p><strong>When:</strong> September–October</p>
+        <p><strong>What:</strong> Aerate + plant new tall fescue seed. Fills thin areas and improves thickness.</p>
+        <p><strong>Customer value:</strong> "Fall is the ideal window for fescue seed. The aeration gives it perfect seed-to-soil contact."</p>
+      </div>
+      <div class="quick-card" data-searchable="mosquito control fog prevention outdoor">
+        <h4>&#129439; Mosquito Control</h4>
+        <p><strong>When:</strong> April–October, every 28–35 days (7 applications)</p>
+        <p><strong>Type:</strong> Fog application</p>
+        <p><strong>Customer value:</strong> "Makes your outdoor space more enjoyable. Targets mosquitoes as they hatch."</p>
+      </div>
+      <div class="quick-card" data-searchable="fire ant insecticide mound colony granular">
+        <h4>&#128293; Fire Ant Prevention</h4>
+        <p><strong>When:</strong> Anytime, typically March–June (1 application)</p>
+        <p><strong>Type:</strong> Granular insecticide</p>
+        <p><strong>What:</strong> Eliminates colonies at the source. Protection up to 12 months. Works gradually — targets the queen.</p>
+      </div>
+      <div class="quick-card" data-searchable="flea tick insecticide quarterly pet dog cat">
+        <h4>&#128062; Flea &amp; Tick Prevention</h4>
+        <p><strong>When:</strong> Anytime, approximately quarterly (4 applications)</p>
+        <p><strong>Type:</strong> Liquid barrier treatment</p>
+        <p><strong>What:</strong> Reduces fleas and ticks in grass and shaded areas. Contact kill + residual prevention.</p>
+      </div>
+      <div class="quick-card" data-searchable="perimeter pest prevention foundation home crawling insects quarterly">
+        <h4>&#127968; Perimeter Pest Prevention</h4>
+        <p><strong>When:</strong> Anytime, approximately quarterly (4 applications)</p>
+        <p><strong>Type:</strong> Liquid barrier around foundation</p>
+        <p><strong>What:</strong> Stops crawling pests from entering the home. Applied around the foundation perimeter.</p>
+      </div>
+      <div class="quick-card" data-searchable="garden bed weed prevention pre-emergent granular beds landscape">
+        <h4>&#127803; Garden Bed Weed Prevention</h4>
+        <p><strong>When:</strong> Round 1: March–April · Round 2: September–October</p>
+        <p><strong>Type:</strong> Granular pre-emergent</p>
+        <p><strong>What:</strong> Creates a barrier in garden beds to prevent weed seeds from sprouting.</p>
+      </div>
+      <div class="quick-card" data-searchable="growth regulator bermuda zoysia PGR mowing density">
+        <h4>&#9989; Growth Regulator (Bermuda &amp; Zoysia)</h4>
+        <p><strong>When:</strong> June, July, August (3 applications)</p>
+        <p><strong>Type:</strong> Liquid</p>
+        <p><strong>What:</strong> Slows top growth, strengthens roots, more even growth, denser turf, better color. Reduces mowing frequency.</p>
+      </div>
+      <div class="quick-card" data-searchable="fescue overseeding seed fall planting">
+        <h4>&#127806; Fescue Overseeding</h4>
+        <p><strong>When:</strong> September–October</p>
+        <p><strong>What:</strong> Fescue seed at 5 lbs / 1,000 sq ft. Thickens thin areas and replenishes the lawn with new grass.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
 const warmRounds = [
-  { code:"W1", name:"Pre-Emergent + Post-Emergent", timing:"Jan (last wk) – Feb", type:"Liquid",
-    chems:[["Prodiamine Liquid (Resolute 4FL)","0.75 oz / 1K sq ft"],["Metsulfuron Methyl (MSM Turf)","0.00575 oz / 1K sq ft"],["Escalade 2","0.75 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"],["Sim-Trol 4L (temps below 75°F)","0.75 oz / 1K sq ft"]],
-    talk:"Grass is dormant — ideal window for weed prevention. We're putting down a soil barrier to stop spring weeds before they sprout, and knocking out anything already up. No fertilizer this round — just weed control.",
-    yard:"Dormant, not actively growing. Customer should see fewer weeds emerging over the next several weeks."
+  {
+    code: 'W1', name: 'Pre-Emergent + Post-Emergent', timing: 'Jan (last week) – Feb', type: 'Liquid',
+    chems: [
+      ['Prodiamine Liquid (Resolute 4FL)', '0.75 oz / 1,000 sq ft'],
+      ['Metsulfuron Methyl (MSM Turf)', '0.00575 oz / 1,000 sq ft'],
+      ['Escalade 2', '0.75 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+      ['Sim-Trol 4L (temps below 75°F)', '0.75 oz / 1,000 sq ft'],
+    ],
+    talk: 'Grass is dormant — this is the ideal window for weed prevention. We\'re putting down a barrier to stop spring weeds before they sprout, and knocking out anything that\'s already up.'
   },
-  { code:"W2", name:"Pre-Emergent + Post-Emergent", timing:"Mar – Apr", type:"Liquid",
-    chems:[["Dimension 2EW (Dithiopyr)","0.65 oz / 1K sq ft"],["Negate","0.035 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Still dormant or just waking up. We're reinforcing the pre-emergent barrier with a second chemistry (rotation prevents resistance) and targeting any grassy weeds that broke through round 1.",
-    yard:"Dormant to early green-up. Significantly fewer weeds breaking through."
+  {
+    code: 'W2', name: 'Pre-Emergent + Post-Emergent', timing: 'Mar – Apr', type: 'Liquid',
+    chems: [
+      ['Dimension 2EW', '0.65 oz / 1,000 sq ft'],
+      ['Negate', '0.035 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Still dormant or just starting to wake up. We\'re reinforcing the pre-emergent barrier with a second chemistry and targeting any grassy weeds that broke through.'
   },
-  { code:"W3", name:"Fertilizer + Spot Treat", timing:"Apr – May", type:"Granular",
-    chems:[["25-0-12 w/ 85% poly slow-release","5 lbs / 1K sq ft"],["Spot treat: Change Up","0.75 oz / 1 gal water"],["Spot treat: Pro Sedge","1 scoop / 1 gal water"]],
-    talk:"The grass is coming out of dormancy and greening up. This is a high-quality slow-release fertilizer to fuel that growth. We'll spot-treat any broadleaf weeds or nutsedge we see.",
-    yard:"Coming out of dormancy, greening up. Deeper green color, thicker turf, stronger growth."
+  {
+    code: 'W3', name: 'Fertilizer + Spot Treat', timing: 'Apr – May', type: 'Granular',
+    chems: [
+      ['25-0-12 w/ 85% poly slow-release', '5 lbs / 1,000 sq ft'],
+      ['Spot treat: Change Up', '0.75 oz / 1 gal water'],
+      ['Spot treat: Pro Sedge', '1 scoop / 1 gal water'],
+    ],
+    talk: 'The grass is coming out of dormancy and greening up. This is a high-quality slow-release fertilizer to fuel that growth. We\'ll spot-treat any weeds or sedge we see.'
   },
-  { code:"W4", name:"Fertilizer + Spot Treat", timing:"Jun – Jul", type:"Granular",
-    chems:[["24-0-5 w/ 50% XCU","5 lbs / 1K sq ft"],["Spot treat: Celsius","0.075 oz / 1K sq ft"],["Spot treat: Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Full green-up, actively growing. Another round of controlled-release fertilizer for density and color. Spot-treating any summer weeds with Celsius, which is specifically designed for warm-season turf.",
-    yard:"Actively growing, full green-up. Thicker, greener, healthier."
+  {
+    code: 'W4', name: 'Fertilizer + Spot Treat', timing: 'Jun – Jul', type: 'Granular',
+    chems: [
+      ['24-0-5 w/ 50% XCU', '5 lbs / 1,000 sq ft'],
+      ['Spot treat: Celsius', '0.075 oz / 1,000 sq ft'],
+      ['Spot treat: Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Full green-up — the grass is actively growing. Another round of controlled-release fertilizer for density and color. Spot-treating any summer weeds with Celsius.'
   },
-  { code:"W5", name:"Fertilizer + Post-Emergent", timing:"Jul – Aug", type:"Liquid",
-    chems:[["25-0-0 w/ Kelp","6 oz / 1K sq ft"],["Celsius","0.070 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"],["Spot treat: Pro Sedge","1 scoop / 1 gal water"]],
-    talk:"Peak growing season. Liquid fertilizer with kelp for nutrition plus active weed control. Targeting any nutsedge that's popped up in the heat.",
-    yard:"Actively growing, full green-up. Continued density and color improvement."
+  {
+    code: 'W5', name: 'Fertilizer + Post-Emergent', timing: 'Jul – Aug', type: 'Liquid',
+    chems: [
+      ['25-0-0 w/ Kelp', '6 oz / 1,000 sq ft'],
+      ['Celsius', '0.070 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+      ['Spot treat: Pro Sedge', '1 scoop / 1 gal water'],
+    ],
+    talk: 'Peak growing season. Liquid fertilizer with kelp for nutrition + active weed control. Targeting any sedge that\'s popped up in the heat.'
   },
-  { code:"W6", name:"Fall Pre-Emergent", timing:"Aug – Sep", type:"Granular",
-    chems:[["0-0-7 w/ 0.45% Prodiamine granular","5 lbs / 1K sq ft"],["Spot treat: Tribute Total","0.069 oz / 1K sq ft"],["Spot treat: Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Growth is slowing. We're laying a pre-emergent barrier for winter and spring weeds, plus potassium to help the grass harden off for dormancy. Think of it as winterizing the lawn.",
-    yard:"Slowing growth. Prevention of winter/spring weeds begins."
+  {
+    code: 'W6', name: 'Fall Pre-Emergent', timing: 'Aug – Sep', type: 'Granular',
+    chems: [
+      ['0-0-7 w/ 0.45% Prodiamine granular', '5 lbs / 1,000 sq ft'],
+      ['Spot treat: Tribute Total', '0.069 oz / 1,000 sq ft'],
+      ['Spot treat: Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Growth is slowing down. We\'re laying a pre-emergent barrier for winter and spring weeds, plus potassium to help the grass harden off for dormancy.'
   },
-  { code:"W7", name:"Post-Emergent (Winter Cleanup)", timing:"Nov – Dec", type:"Liquid",
-    chems:[["Cool Power","1 oz / 1K sq ft"],["Sim-Trol 4L (temps below 75°F)","0.75 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Grass is fully dormant. We're cleaning up cool-season weeds so the lawn looks clean and the barrier is reinforced going into winter. Sets up a strong start in spring.",
-    yard:"Fully dormant. Fewer winter weeds, cleaner dormant lawn."
+  {
+    code: 'W7', name: 'Pre-Emergent + Post-Emergent', timing: 'Nov – Dec', type: 'Liquid',
+    chems: [
+      ['Cool Power', '1 oz / 1,000 sq ft'],
+      ['Sim-Trol 4L (temps below 75°F)', '0.75 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Grass is fully dormant. We\'re cleaning up cool-season weeds and reinforcing the barrier going into winter so the lawn is clean when it wakes up in spring.'
   },
 ];
 
 const coolRounds = [
-  { code:"F1", name:"Fertilizer + Iron", timing:"Jan – Feb", type:"Granular",
-    chems:[["24-0-5 w/ Iron, 50% slow release","5 lbs / 1K sq ft"],["Spot treat: Escalade 2","0.75 oz / 1K sq ft"]],
-    talk:"Fescue grows actively in cool weather. This feeds the lawn coming out of winter with slow-release nitrogen and iron for deep green color. We'll spot-treat any broadleaf weeds we see.",
-    yard:"Actively growing in above-freezing temps. Greener, thicker, healthier."
+  {
+    code: 'F1', name: 'Fertilizer + Iron', timing: 'Jan – Feb', type: 'Granular',
+    chems: [
+      ['24-0-5 w/ Iron, 50% slow release', '5 lbs / 1,000 sq ft'],
+      ['Spot treat: Escalade 2', '0.75 oz / 1,000 sq ft'],
+    ],
+    talk: 'Fescue grows actively in cool weather. This feeds the lawn coming out of winter and gives it iron for deep green color.'
   },
-  { code:"F2", name:"Pre-Emergent + Post-Emergent + Fertilizer", timing:"Feb – Mar", type:"Liquid",
-    chems:[["Change Up","0.75 oz / 1K sq ft"],["25-0-0 w/ Kelp","6 oz / 1K sq ft"],["Prodiamine Liquid (Resolute 4FL)","0.55 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Active growing season — we're feeding the lawn, putting down a pre-emergent barrier for spring/summer weeds, and killing anything that's already growing. Three things in one visit.",
-    yard:"Actively growing. Weed prevention for spring/summer. Thicker turf."
+  {
+    code: 'F2', name: 'Pre-Emergent + Post-Emergent + Fertilizer', timing: 'Feb – Mar', type: 'Liquid',
+    chems: [
+      ['Change Up', '0.75 oz / 1,000 sq ft'],
+      ['25-0-0 w/ Kelp', '6 oz / 1,000 sq ft'],
+      ['Prodiamine Liquid (Resolute 4FL)', '0.55 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Active growing season — we\'re feeding the lawn, putting down a pre-emergent barrier for spring/summer weeds, and killing anything that\'s already growing.'
   },
-  { code:"F3", name:"Pre-Emergent + Post-Emergent + Fertilizer", timing:"Apr – May", type:"Liquid",
-    chems:[["Change Up","0.75 oz / 1K sq ft"],["25-0-0 w/ Kelp","6 oz / 1K sq ft"],["Dithiopyr Liquid (Dimension 2EW)","0.65 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Reinforcing the pre-emergent with a second chemistry before summer (prevents resistance), continued nutrition, and broadleaf weed control.",
-    yard:"Active growth continues. Spring/summer weed barrier reinforced."
+  {
+    code: 'F3', name: 'Pre-Emergent + Post-Emergent + Fertilizer', timing: 'Apr – May', type: 'Liquid',
+    chems: [
+      ['Change Up', '0.75 oz / 1,000 sq ft'],
+      ['25-0-0 w/ Kelp', '6 oz / 1,000 sq ft'],
+      ['Dithiopyr Liquid (Dimension 2EW)', '0.65 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Reinforcing the pre-emergent with a second chemistry before summer, continued nutrition, and broadleaf weed control.'
   },
-  { code:"F4", name:"Soil Health + Post-Emergent", timing:"Jun – Jul", type:"Liquid",
-    chems:[["Earth Max","3 oz / 1K sq ft"],["Change Up","0.75 oz / 1K sq ft"],["Non-Ionic Surfactant (Sticker)","0.25 oz / 1K sq ft"]],
-    talk:"Fescue slows down in summer heat — this is its stressful period. Earth Max supports soil biology and stress tolerance. We're still managing weeds to reduce competition for the grass.",
-    yard:"Slowing growth. Nutrition to sustain through summer heat stress."
+  {
+    code: 'F4', name: 'Fertilizer + Post-Emergent', timing: 'Jun – Jul', type: 'Liquid',
+    chems: [
+      ['Earth Max', '3 oz / 1,000 sq ft'],
+      ['Change Up', '0.75 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant (Sticker)', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Fescue slows down in summer heat. Earth Max supports soil health and stress tolerance. We\'re still managing weeds to reduce competition.'
   },
-  { code:"F5", name:"Fertilizer + Lime (Post-Seeding)", timing:"Aug – Oct", type:"Granular",
-    chems:[["8-14-4 w/ Lime","5 lbs / 1K sq ft"]],
-    talk:"After overseeding, this phosphorus-heavy fertilizer with lime feeds new seed and adjusts soil pH. Phosphorus promotes root establishment — exactly what baby grass needs.",
-    yard:"New grass is planted. Nutrition promotes new growth and establishment."
+  {
+    code: 'F5', name: 'Fertilizer + Lime', timing: 'Aug – Oct', type: 'Granular',
+    chems: [
+      ['8-14-4 w/ Lime', '5 lbs / 1,000 sq ft'],
+    ],
+    talk: 'After overseeding, this phosphorus-heavy fertilizer with lime feeds new seed and adjusts soil pH. Promotes strong root establishment.'
   },
-  { code:"F6", name:"Fertilizer + Iron", timing:"Oct – Nov", type:"Granular",
-    chems:[["24-0-4 w/ Iron, 50% slow release","5 lbs / 1K sq ft"],["Spot treat: Tenacity","0.14 oz / 1K sq ft"],["Spot treat: Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Fall is fescue's prime growing season. Another round of slow-release nutrition with iron for thickness and color. Spot-treating weeds with Tenacity, which is excellent for fall fescue.",
-    yard:"Actively growing. Prime season for thickening and recovery."
+  {
+    code: 'F6', name: 'Fertilizer + Iron', timing: 'Oct – Nov', type: 'Granular',
+    chems: [
+      ['24-0-4 w/ Iron, 50% slow release', '5 lbs / 1,000 sq ft'],
+      ['Spot treat: Tenacity', '0.14 oz / 1,000 sq ft'],
+      ['Spot treat: Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Fall is fescue\'s prime growing season. Another round of slow-release nutrition with iron for thickness and color. Spot-treating weeds with Tenacity.'
   },
-  { code:"F7", name:"Post-Emergent + Fertilizer", timing:"Nov – Dec", type:"Liquid",
-    chems:[["25-0-0 w/ Kelp","9 oz / 1K sq ft"],["Escalade 2","0.75 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Growth is slowing — we're cleaning up winter broadleaf weeds and giving a last nutrition push. Highest kelp rate of the year to carry the lawn through winter.",
-    yard:"Slowing growth. Weed control for winter/spring weeds applied."
+  {
+    code: 'F7', name: 'Post-Emergent + Fertilizer', timing: 'Nov – Dec', type: 'Liquid',
+    chems: [
+      ['25-0-0 w/ Kelp', '9 oz / 1,000 sq ft'],
+      ['Escalade 2', '0.75 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Growth is slowing — we\'re cleaning up winter broadleaf weeds and giving a last nutrition push before the lawn goes into its slower period.'
   },
 ];
 
 const coastalRounds = [
-  { code:"C1", name:"Pre-Emergent + Post-Emergent", timing:"Mar", type:"Liquid",
-    chems:[["Prodiamine Liquid (Resolute 4FL)","0.375 oz / 1K sq ft"],["Metsulfuron Methyl (MSM Turf)","0.00575 oz / 1K sq ft"],["Change Up","0.75 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Centipede and St. Augustine are dormant. Pre-emergent barrier plus broadleaf weed control. Note: lower Prodiamine rate than Bermuda — these grasses are more sensitive to pre-emergents.",
-    yard:"Dormant. Ideal time for weed prevention and soil conditioning."
+  {
+    code: 'C1', name: 'Pre-Emergent + Post-Emergent', timing: 'Mar', type: 'Liquid',
+    chems: [
+      ['Prodiamine Liquid (Resolute 4FL)', '0.375 oz / 1,000 sq ft'],
+      ['Metsulfuron Methyl (MSM Turf)', '0.00575 oz / 1,000 sq ft'],
+      ['Change Up', '0.75 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Centipede and St. Augustine are dormant. Pre-emergent barrier + broadleaf weed control. Note: lower Prodiamine rate than warm season — these grasses are more sensitive.'
   },
-  { code:"C2", name:"Pre-Emergent + Post-Emergent", timing:"Apr", type:"Liquid",
-    chems:[["Dithiopyr Liquid (Dimension 2EW)","0.65 oz / 1K sq ft"],["Metsulfuron Methyl (MSM Turf)","0.000575 oz / 1K sq ft"],["Change Up","0.75 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Coming out of dormancy, starting to green up. Second pre-emergent chemistry plus continued broadleaf control.",
-    yard:"Greening up. Fewer weeds breaking through."
+  {
+    code: 'C2', name: 'Pre-Emergent + Post-Emergent', timing: 'Apr', type: 'Liquid',
+    chems: [
+      ['Dithiopyr Liquid (Dimension 2EW)', '0.65 oz / 1,000 sq ft'],
+      ['Metsulfuron Methyl (MSM Turf)', '0.000575 oz / 1,000 sq ft'],
+      ['Change Up', '0.75 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Coming out of dormancy, greening up. Second pre-emergent chemistry + continued broadleaf control.'
   },
-  { code:"C3", name:"Fertilizer + Spot Treat", timing:"May", type:"Granular",
-    chems:[["24-0-5 w/ Iron, 50% slow release","5 lbs / 1K sq ft"],["Spot treat: Celsius","0.075 oz / 1K sq ft"]],
-    talk:"Full green-up and active growth. Feeding the lawn with slow-release nitrogen plus iron for color and density. Spot-treating any weeds that got through.",
-    yard:"Actively growing, full green-up. Deeper color, thicker turf."
+  {
+    code: 'C3', name: 'Fertilizer + Spot Treat', timing: 'May', type: 'Granular',
+    chems: [
+      ['24-0-5 w/ Iron, 50% slow release', '5 lbs / 1,000 sq ft'],
+      ['Spot treat: Celsius', '0.075 oz / 1,000 sq ft'],
+    ],
+    talk: 'Full green-up and active growth. Feeding the lawn with slow-release nitrogen + iron for color and density.'
   },
-  { code:"C4", name:"Soil Health + Post-Emergent", timing:"Jun", type:"Liquid",
-    chems:[["Earth Max","3 oz / 1K sq ft"],["Celsius","0.070 oz / 1K sq ft"],["Non-Ionic Surfactant","0.25 oz / 1K sq ft"]],
-    talk:"Active growing season. Earth Max for soil biology plus Celsius for summer weed pressure. These grasses are thriving right now.",
-    yard:"Actively growing. Continued density and health improvement."
+  {
+    code: 'C4', name: 'Post-Emergent + Soil Health', timing: 'Jun', type: 'Liquid',
+    chems: [
+      ['Earth Max', '3 oz / 1,000 sq ft'],
+      ['Celsius', '0.070 oz / 1,000 sq ft'],
+      ['Non-Ionic Surfactant', '0.25 oz / 1,000 sq ft'],
+    ],
+    talk: 'Active growing season. Earth Max for soil biology + Celsius for summer weed pressure.'
   },
-  { code:"C5", name:"Fall Pre-Emergent", timing:"Sep", type:"Granular",
-    chems:[["0-0-7 w/ 0.45% Prodiamine granular","5 lbs / 1K sq ft"],["Spot treat: C4 mix if needed","—"]],
-    talk:"Growth slowing down. Pre-emergent barrier for winter/spring weeds plus potassium for stress tolerance going into dormancy.",
-    yard:"Slowing growth. Winter/spring weed prevention begins."
+  {
+    code: 'C5', name: 'Fall Pre-Emergent', timing: 'Sep', type: 'Granular',
+    chems: [
+      ['0-0-7 w/ 0.45% Prodiamine granular', '5 lbs / 1,000 sq ft'],
+      ['Spot treat: C4 mix', '—'],
+    ],
+    talk: 'Growth slowing down. Pre-emergent barrier for winter/spring weeds + potassium for stress tolerance going into dormancy.'
   },
-  { code:"C6", name:"Post-Emergent + Stress Relief", timing:"Nov", type:"Liquid",
-    chems:[["Sim-Trol 4L (temps below 75°F)","0.75 oz / 1K sq ft"],["Change Up","0.75 oz / 1K sq ft"],["Harrell's Stress Relief 0-0-25","3 oz / 1K sq ft"]],
-    talk:"Fully dormant. Cleaning up cool-season weeds and applying high-potassium stress relief for winter hardiness. Sets up a clean start in spring.",
-    yard:"Fully dormant. Winter weed prevention. Stress protection."
+  {
+    code: 'C6', name: 'Post-Emergent + Stress Relief', timing: 'Nov', type: 'Liquid',
+    chems: [
+      ['Sim-Trol 4L (temps below 75°F)', '0.75 oz / 1,000 sq ft'],
+      ['Change Up', '0.75 oz / 1,000 sq ft'],
+      ["Harrell's Stress Relief 0-0-25", '3 oz / 1,000 sq ft'],
+    ],
+    talk: 'Fully dormant. Cleaning up cool-season weeds and applying potassium for winter hardiness.'
   },
 ];
 
 const fungicideRounds = [
-  { code:"WFP1", name:"Warm Season Fungicide Rd 1", timing:"Apr – May", type:"Liquid", program:"Bermuda / Zoysia / Centipede / St. Aug",
-    chems:[["Propiconazole 41.8","0.75 oz / 1K sq ft"],["Activator Plus","0.25 oz / 1K sq ft"],["25-0-0 w/ Kelp","3 oz / 1K sq ft"]],
-    talk:"Grass is coming out of dormancy — weakened turf is vulnerable to disease during green-up. This prevents fungus before it starts and includes nutrition.",
-    yard:"Green-up phase. Weaker grass susceptible to disease."
+  { code: 'WFP1', name: 'Warm Season Fungicide Round 1', timing: 'Apr – May', type: 'Liquid', program: 'Bermuda / Zoysia / Centipede / St. Aug',
+    chems: [['Propiconazole 41.8', '0.75 oz / 1,000 sq ft'], ['Activator Plus', '0.25 oz / 1,000 sq ft'], ['25-0-0 w/ Kelp', '3 oz / 1,000 sq ft']],
+    talk: 'Grass is coming out of dormancy — weakened turf is susceptible to disease during green-up. This prevents fungus before it starts and adds nutrition.'
   },
-  { code:"WFP2", name:"Warm Season Fungicide Rd 2", timing:"Jun – Jul", type:"Liquid", program:"Bermuda / Zoysia / Centipede / St. Aug",
-    chems:[["Xzemplar","0.26 oz / 1K sq ft"],["Activator Plus","0.25 oz / 1K sq ft"],["25-0-0 w/ Kelp","5 oz / 1K sq ft"]],
-    talk:"Peak heat and moisture — prime conditions for disease. We rotate to a different fungicide chemistry to prevent resistance. Higher fertilizer rate this round.",
-    yard:"Fully growing. Heat stress and moisture create disease risk."
+  { code: 'WFP2', name: 'Warm Season Fungicide Round 2', timing: 'Jun – Jul', type: 'Liquid', program: 'Bermuda / Zoysia / Centipede / St. Aug',
+    chems: [['Xzemplar', '0.26 oz / 1,000 sq ft'], ['Activator Plus', '0.25 oz / 1,000 sq ft'], ['25-0-0 w/ Kelp', '5 oz / 1,000 sq ft']],
+    talk: 'Peak heat and moisture — prime conditions for disease. We rotate to a different fungicide chemistry to prevent resistance.'
   },
-  { code:"WFP3", name:"Warm Season Fungicide Rd 3", timing:"Aug", type:"Liquid", program:"Bermuda / Zoysia / Centipede / St. Aug",
-    chems:[["Propiconazole 41.8","0.75 oz / 1K sq ft"],["Activator Plus","0.25 oz / 1K sq ft"]],
-    talk:"Heading into dormancy. Moisture doesn't absorb as fast, creating fungal risk with cooler temps. Last preventative round of the season.",
-    yard:"Going dormant. Slower moisture absorption = fungal risk."
+  { code: 'WFP3', name: 'Warm Season Fungicide Round 3', timing: 'Aug', type: 'Liquid', program: 'Bermuda / Zoysia / Centipede / St. Aug',
+    chems: [['Propiconazole 41.8', '0.75 oz / 1,000 sq ft'], ['Activator Plus', '0.25 oz / 1,000 sq ft']],
+    talk: 'Grass heading into dormancy. Moisture doesn\'t absorb as fast, creating fungal risk with cooler temps. Last preventative round.'
   },
-  { code:"PF1", name:"Fescue Fungicide Rd 1", timing:"Apr", type:"Liquid", program:"Fescue",
-    chems:[["Propiconazole 41.8","0.75 oz / 1K sq ft"],["Activator Plus","0.25 oz / 1K sq ft"],["25-0-0 w/ Kelp","6 oz / 1K sq ft"]],
-    talk:"Starting preventative disease program before summer stress hits fescue. Includes nutrition to support the grass through the transition.",
-    yard:"Approaching summer stress period."
+  { code: 'PF1', name: 'Fescue Fungicide Round 1', timing: 'Apr', type: 'Liquid', program: 'Fescue',
+    chems: [['Propiconazole 41.8', '0.75 oz / 1,000 sq ft'], ['Activator Plus', '0.25 oz / 1,000 sq ft'], ['25-0-0 w/ Kelp', '6 oz / 1,000 sq ft']],
+    talk: 'Starting preventative disease program before summer stress hits fescue. Includes nutrition.'
   },
-  { code:"PF2", name:"Fescue Fungicide Rd 2", timing:"May", type:"Liquid", program:"Fescue",
-    chems:[["Azoxystrobin (Azoxy)","0.75 oz / 1K sq ft"],["Activator Plus","0.25 oz / 1K sq ft"],["Earth Max","3 oz / 1K sq ft"]],
-    talk:"Rotated to a strobilurin fungicide (different mode of action). Earth Max supports soil health during increasing heat.",
-    yard:"Heat and humidity increasing. Disease pressure building."
+  { code: 'PF2', name: 'Fescue Fungicide Round 2', timing: 'May', type: 'Liquid', program: 'Fescue',
+    chems: [['Azoxystrobin (Azoxy)', '0.75 oz / 1,000 sq ft'], ['Activator Plus', '0.25 oz / 1,000 sq ft'], ['Earth Max', '3 oz / 1,000 sq ft']],
+    talk: 'Rotated to a strobilurin fungicide. Earth Max supports soil health during increasing heat stress.'
   },
-  { code:"PF3", name:"Fescue Fungicide Rd 3", timing:"Jun", type:"Liquid", program:"Fescue",
-    chems:[["Azoxystrobin (Azoxy)","0.75 oz / 1K sq ft"],["Activator Plus","0.25 oz / 1K sq ft"],["Earth Max","3 oz / 1K sq ft"]],
-    talk:"Continued prevention through the highest-risk period. Heat and humidity are the biggest drivers of fescue disease. Staying on schedule is critical.",
-    yard:"High stress. Peak disease pressure."
+  { code: 'PF3', name: 'Fescue Fungicide Round 3', timing: 'Jun', type: 'Liquid', program: 'Fescue',
+    chems: [['Azoxystrobin (Azoxy)', '0.75 oz / 1,000 sq ft'], ['Activator Plus', '0.25 oz / 1,000 sq ft'], ['Earth Max', '3 oz / 1,000 sq ft']],
+    talk: 'Continued prevention through the highest-risk period. Heat and humidity are the biggest drivers of fescue disease.'
   },
-  { code:"PF4", name:"Fescue Fungicide Rd 4", timing:"Jul", type:"Liquid", program:"Fescue",
-    chems:[["Azoxystrobin (Azoxy)","0.75 oz / 1K sq ft"],["Activator Plus","0.25 oz / 1K sq ft"],["Earth Max","3 oz / 1K sq ft"]],
-    talk:"Peak summer stress — fescue is most vulnerable right now. Missing this round is when we see the biggest disease losses.",
-    yard:"Maximum stress. Most vulnerable period."
+  { code: 'PF4', name: 'Fescue Fungicide Round 4', timing: 'Jul', type: 'Liquid', program: 'Fescue',
+    chems: [['Azoxystrobin (Azoxy)', '0.75 oz / 1,000 sq ft'], ['Activator Plus', '0.25 oz / 1,000 sq ft'], ['Earth Max', '3 oz / 1,000 sq ft']],
+    talk: 'Peak summer stress. This is when fescue is most vulnerable. Staying on schedule is critical.'
   },
-  { code:"PF5", name:"Fescue Fungicide Rd 5", timing:"Aug", type:"Liquid", program:"Fescue",
-    chems:[["Propiconazole 41.8","0.75 oz / 1K sq ft"],["Earth Max","3 oz / 1K sq ft"]],
-    talk:"Final preventative round before fall recovery. Rotated back to Propiconazole. Heat is breaking and fescue will start bouncing back.",
-    yard:"Heat breaking. Transition to fall recovery."
+  { code: 'PF5', name: 'Fescue Fungicide Round 5', timing: 'Aug', type: 'Liquid', program: 'Fescue',
+    chems: [['Propiconazole 41.8', '0.75 oz / 1,000 sq ft'], ['Earth Max', '3 oz / 1,000 sq ft']],
+    talk: 'Final preventative round before fall recovery. Rotated back to Propiconazole. Heat is breaking and fescue will start recovering.'
   },
 ];
 
 const shrubRounds = [
-  { code:"SC1", name:"Deep Root Injection", timing:"Mar", type:"Liquid",
-    chems:[["Enclave","32 oz / 100 gal"],["Triple Crown / Merit","8 oz / 100 gal"],["Earth Max","32 oz / 100 gal"],["25-0-0 w/ Kelp","128 oz / 100 gal"]],
-    talk:"Shrubs are transitioning from slow growth to bloom. Deep root injection delivers nutrition, fungus prevention, and insect control directly to the root zone — more effective than surface spraying for the first round.",
-    yard:"Shrubs beginning to bloom."
+  { code: 'SC1', name: 'Deep Root Injection', timing: 'Mar', type: 'Liquid',
+    chems: [['Enclave', '32 oz / 100 gal'], ['Triple Crown / Merit', '8 oz / 100 gal'], ['Earth Max', '32 oz / 100 gal'], ['25-0-0 w/ Kelp', '128 oz / 100 gal']],
+    talk: 'Shrubs are transitioning from slow growth to bloom. Deep root injection delivers nutrition, fungus prevention, and insect control directly to the root zone.'
   },
-  { code:"SC2", name:"Foliar Spray", timing:"Apr – May", type:"Liquid",
-    chems:[["Altus","8 oz / 100 gal"],["Enclave","32 oz / 100 gal"],["Harrell's Max Minors","32 oz / 100 gal"],["Earth Max","64 oz / 100 gal"]],
-    talk:"Shrubs actively growing and blooming. Foliar spray covers nutrition, disease prevention, and insect control. Max Minors provides trace micronutrients.",
-    yard:"Actively growing and blooming."
+  { code: 'SC2', name: 'Foliar Spray', timing: 'Apr – May', type: 'Liquid',
+    chems: [['Altus', '8 oz / 100 gal'], ['Enclave', '32 oz / 100 gal'], ["Harrell's Max Minors", '32 oz / 100 gal'], ['Earth Max', '64 oz / 100 gal']],
+    talk: 'Shrubs are actively growing and blooming. Foliar spray for nutrition, disease prevention, and insect control.'
   },
-  { code:"SC3", name:"Foliar Spray", timing:"Jun – Jul", type:"Liquid",
-    chems:[["Enclave","32 oz / 100 gal"],["Altus","8 oz / 100 gal"],["Harrell's Max Minors","32 oz / 100 gal"],["Earth Max","64 oz / 100 gal"]],
-    talk:"Mid-season maintenance. Continued protection during peak growing and blooming. Same formulation as SC2.",
-    yard:"Peak growing and blooming."
+  { code: 'SC3', name: 'Foliar Spray', timing: 'Jun – Jul', type: 'Liquid',
+    chems: [['Enclave', '32 oz / 100 gal'], ['Altus', '8 oz / 100 gal'], ["Harrell's Max Minors", '32 oz / 100 gal'], ['Earth Max', '64 oz / 100 gal']],
+    talk: 'Mid-season maintenance. Continued protection during peak growing and blooming period.'
   },
-  { code:"SC4", name:"Foliar Spray", timing:"Aug – Sep", type:"Liquid",
-    chems:[["Enclave","32 oz / 100 gal"],["Triple Crown","8 oz / 100 gal"],["Earth Max","64 oz / 100 gal"],["Harrell's Max Cal","64 oz / 100 gal"]],
-    talk:"Late-season spray. Switched from Altus back to Triple Crown for insect rotation, and added calcium supplement for cell wall strength heading into fall.",
-    yard:"Late season. Preparing for dormancy."
+  { code: 'SC4', name: 'Foliar Spray', timing: 'Aug – Sep', type: 'Liquid',
+    chems: [['Enclave', '32 oz / 100 gal'], ['Triple Crown', '8 oz / 100 gal'], ['Earth Max', '64 oz / 100 gal'], ["Harrell's Max Cal", '64 oz / 100 gal']],
+    talk: 'Late-season spray. Calcium supplement for cell wall strength heading into fall. Continued disease and insect prevention.'
   },
-  { code:"SC5", name:"Foliar Spray", timing:"Oct – Nov", type:"Liquid",
-    chems:[["Ultra-Fine Spray Oil","64 oz / 100 gal"],["Enclave","32 oz / 100 gal"],["Earth Max","64 oz / 100 gal"]],
-    talk:"Final round. Horticultural oil smothers overwintering insects and eggs. Disease prevention continues. Sets up clean start for spring.",
-    yard:"Going dormant. Overwintering pest prevention."
+  { code: 'SC5', name: 'Foliar Spray', timing: 'Oct – Nov', type: 'Liquid',
+    chems: [['Ultra-Fine Spray Oil', '64 oz / 100 gal'], ['Enclave', '32 oz / 100 gal'], ['Earth Max', '64 oz / 100 gal']],
+    talk: 'Final round. Horticultural oil for overwintering insect control + disease prevention going into dormancy.'
   },
 ];
 
-const safetyData = {
-  preEmergents: [
-    { name:"Prodiamine (Resolute 4FL)", where:"W1, C1, F2, fall granular rounds", what:"Prevents crabgrass, goosegrass, annual weeds. Creates soil barrier." },
-    { name:"Dithiopyr (Dimension 2EW)", where:"W2, C2, F3", what:"Also prevents crabgrass. Has some early post-emergent activity on young crabgrass." },
-    { name:"0-0-7 w/ Prodiamine granular", where:"W6, C5", what:"Fall pre-emergent + potassium. Prevents winter annuals." },
-  ],
-  postEmergents: [
-    { name:"Escalade 2", where:"W1, F1, F7", what:"3-way broadleaf herbicide. Dandelions, clover, chickweed." },
-    { name:"Change Up", where:"W3, F2–F4, C1–C2, C6", what:"Broadleaf + sedge control." },
-    { name:"Celsius", where:"W4–W6, C3–C5 spot", what:"Warm-season safe. Excellent on tough summer weeds." },
-    { name:"Cool Power", where:"W7", what:"Cool-weather broadleaf control." },
-    { name:"Metsulfuron Methyl (MSM)", where:"W1, C1–C2", what:"Low-rate broadleaf control." },
-    { name:"Negate", where:"W2", what:"Targets grassy weeds in warm-season turf." },
-    { name:"Tribute Total", where:"W6 spot", what:"Broad-spectrum warm-season herbicide." },
-    { name:"Sim-Trol 4L", where:"W1, W7, C6", what:"Used when temps below 75°F." },
-    { name:"Tenacity", where:"F6 spot", what:"Crabgrass + broadleaf in fescue." },
-    { name:"Pro Sedge / Sedgehammer", where:"W3, W5 spot", what:"Targets nutsedge specifically." },
-  ],
-  fertilizers: [
-    { name:"25-0-12 w/ 85% poly", where:"W3", what:"Slow-release N + K." },
-    { name:"24-0-5 w/ 50% XCU", where:"W4", what:"Controlled-release nitrogen + iron." },
-    { name:"25-0-0 w/ Kelp", where:"W5, F2–F3, F7, fungicide rounds", what:"Liquid nitrogen + kelp extract." },
-    { name:"24-0-5 w/ Iron", where:"F1, F6, C3", what:"Granular w/ iron for color." },
-    { name:"8-14-4 w/ Lime", where:"F5", what:"High phosphorus + lime for pH." },
-    { name:"Harrell's Stress Relief 0-0-25", where:"C6", what:"High potassium for stress tolerance." },
-    { name:"Earth Max", where:"F4, C4, shrub rounds", what:"Soil health biostimulant." },
-  ],
-  fungicides: [
-    { name:"Propiconazole 41.8", where:"WFP1, WFP3, PF1, PF5", what:"Systemic fungicide." },
-    { name:"Xzemplar", where:"WFP2", what:"Broad-spectrum fungicide (rotation)." },
-    { name:"Azoxystrobin (Azoxy)", where:"PF2–PF4", what:"Strobilurin fungicide." },
-    { name:"Enclave", where:"SC1–SC5", what:"Multi-site contact fungicide for shrubs." },
-  ],
-  insecticides: [
-    { name:"Bifenthrin", where:"Grub/armyworm, perimeter, flea/tick", what:"Broad-spectrum insecticide." },
-    { name:"Triple Crown / Merit", where:"SC1, SC4", what:"Systemic insecticide for shrubs." },
-    { name:"Altus", where:"SC2–SC3", what:"Low-impact shrub insecticide." },
-  ],
-};
-
-const quizQuestions = [
-  { q:"Does Grass Nerds use glyphosate (Roundup)?", a:"No. We use selective herbicides that target weeds without harming turf. Glyphosate is non-selective and kills everything.", category:"Safety" },
-  { q:"A customer asks 'Is it safe for my kids to play in the yard?' — what do you say?", a:"All products are labeled safe for residential use. Stay off treated areas until dry — usually 30-60 minutes. The surfactant can feel sticky if walked on before drying. We do NOT use glyphosate.", category:"Safety" },
-  { q:"What's the difference between pre-emergent and post-emergent?", a:"Pre-emergent creates a barrier in the soil to prevent weed SEEDS from germinating. Post-emergent kills weeds that are ALREADY growing. We use both.", category:"Product Knowledge" },
-  { q:"Why do we rotate between Prodiamine and Dimension?", a:"Different chemistries prevent weed resistance. Same reason doctors rotate antibiotics. Prodiamine in Round 1, Dimension in Round 2.", category:"Product Knowledge" },
-  { q:"A customer wants fertilizer only in the backyard, no weed control. What do you say?", a:"Say YES, then explain: weed control and fertilizer work together — killing weeds gives the grass more room to spread. But we CAN do fertilizer-only if that's their preference. Don't say 'we don't typically do that' and leave it there.", category:"Sales" },
-  { q:"What is Earth Max?", a:"A soil health biostimulant. It supports soil biology and stress tolerance. Used in fescue summer rounds (F4), coastal (C4), and all shrub care rounds.", category:"Product Knowledge" },
-  { q:"When is fescue most vulnerable to disease?", a:"June through August — peak summer heat and humidity. That's why the fescue fungicide program runs 5 rounds (PF1-PF5) approximately 30 days apart during this window.", category:"Seasonal" },
-  { q:"What's the active ingredient in our shrub care insecticide for rounds 2-3?", a:"Altus — a low-impact insecticide. We rotate to Triple Crown in rounds 1 and 4 to prevent resistance.", category:"Product Knowledge" },
-  { q:"Customer says 'my Bermuda has bare dirt spots, should I seed it?' What do you tell them?", a:"Bermuda spreads by runners — it fills in over time with proper nutrition. Fertilization rounds help it creep into bare areas. Seeding isn't usually necessary. Patience + nutrition is the answer. Offer aeration if soil is compacted.", category:"Sales" },
-  { q:"What's the re-entry time after a liquid application?", a:"Once the product dries — typically 30 minutes to an hour depending on weather conditions. The surfactant may feel sticky on bare feet if walked on too soon.", category:"Safety" },
-  { q:"Why is the Prodiamine rate lower for Centipede/St. Augustine (C1) vs Bermuda (W1)?", a:"Centipede and St. Augustine are more sensitive to pre-emergent herbicides. Lower rate (0.375 vs 0.75 oz) prevents turf damage while still providing weed barrier.", category:"Product Knowledge" },
-  { q:"A customer wants to know exactly what chemicals we're using. How do you handle it?", a:"Say: 'Absolutely — I can walk you through what's in each round, or I can send you a detailed list. What would you prefer?' Then actually know the products. Never say 'I'm not sure' or 'I'll have to check.'", category:"Sales" },
-];
-
-// ═══════════════════════════════════════════════
-// COMPONENTS
-// ═══════════════════════════════════════════════
-
-const TypeBadge = ({ type }) => {
-  const colors = {
-    Liquid: { bg:"#dbeafe", text:"#1e40af" },
-    Granular: { bg:"#fef3c7", text:"#92400e" },
-    Seed: { bg:"#d1fae5", text:"#065f46" },
-  };
-  const c = colors[type] || { bg:"#f3f4f6", text:"#6b7280" };
-  return <span style={{ background:c.bg, color:c.text, fontSize:11, fontWeight:700, textTransform:"uppercase", letterSpacing:0.6, padding:"3px 8px", borderRadius:4 }}>{type}</span>;
-};
-
-const RoundCard = ({ round, isOpen, toggle, highlight }) => {
-  const borderColor = highlight ? "#c1d62f" : isOpen ? "#162f6e" : "#e5e7eb";
-  const shadowColor = highlight ? "0 0 0 2px rgba(193,214,47,0.35)" : isOpen ? "0 2px 8px rgba(22,47,110,0.1)" : "0 1px 3px rgba(0,0,0,0.04)";
-  return (
-    <div style={{ background:"#fff", border:`1.5px solid ${borderColor}`, borderRadius:8, marginBottom:10, boxShadow:shadowColor, transition:"all 0.15s ease" }}>
-      <div onClick={toggle} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 18px", cursor:"pointer", userSelect:"none" }}>
-        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-          <span style={{ background:"#162f6e", color:"#fff", fontFamily:"'Courier New',monospace", fontSize:12, fontWeight:700, padding:"4px 10px", borderRadius:4, letterSpacing:0.4 }}>{round.code}</span>
-          <span style={{ fontSize:14, fontWeight:600, color:"#1f2937" }}>{round.name}</span>
-          {round.program && <span style={{ fontSize:11, color:"#9ca3af", fontWeight:500 }}>({round.program})</span>}
+// ===== RENDER =====
+function renderRounds(containerId, rounds) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = rounds.map((r, i) => {
+    const typeClass = r.type === 'Liquid' ? 'type-liquid' : r.type === 'Granular' ? 'type-granular' : r.type === 'Seed' ? 'type-seed' : 'type-other';
+    const searchable = [r.code, r.name, r.timing, r.type, r.talk, r.program || '', ...r.chems.map(c => c[0] + ' ' + c[1])].join(' ');
+    return `
+      <div class="round-card" data-searchable="${searchable.toLowerCase()}">
+        <div class="round-header" onclick="this.parentElement.classList.toggle('open')">
+          <div class="round-label">
+            <span class="round-badge">${r.code}</span>
+            <span class="round-name">${r.name}${r.program ? ' <span style="font-weight:400;color:var(--gray-600);font-size:12px;">(' + r.program + ')</span>' : ''}</span>
+          </div>
+          <div class="round-meta">
+            <span class="round-timing">${r.timing}</span>
+            <span class="round-type ${typeClass}">${r.type}</span>
+            <span class="chevron">&#9660;</span>
+          </div>
         </div>
-        <div style={{ display:"flex", alignItems:"center", gap:14 }}>
-          <span style={{ fontSize:12, color:"#6b7280", fontWeight:500 }}>{round.timing}</span>
-          <TypeBadge type={round.type} />
-          <span style={{ color:"#d1d5db", fontSize:16, transition:"transform 0.2s", transform:isOpen?"rotate(180deg)":"rotate(0)" }}>▼</span>
-        </div>
-      </div>
-      {isOpen && (
-        <div style={{ padding:"0 18px 16px", borderTop:"1px solid #f3f4f6" }}>
-          <table style={{ width:"100%", borderCollapse:"collapse", marginTop:12 }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign:"left", fontSize:11, fontWeight:700, textTransform:"uppercase", letterSpacing:0.6, color:"#6b7280", padding:"6px 0", borderBottom:"1px solid #e5e7eb" }}>Product</th>
-                <th style={{ textAlign:"left", fontSize:11, fontWeight:700, textTransform:"uppercase", letterSpacing:0.6, color:"#6b7280", padding:"6px 0", borderBottom:"1px solid #e5e7eb" }}>Rate</th>
-              </tr>
-            </thead>
+        <div class="round-body">
+          <table class="chem-table">
+            <thead><tr><th>Product</th><th>Rate</th></tr></thead>
             <tbody>
-              {round.chems.map(([name,rate],i) => (
-                <tr key={i}>
-                  <td style={{ fontSize:13, padding:"8px 16px 8px 0", borderBottom:"1px solid #f9fafb", fontWeight:name.toLowerCase().includes("spot")? 500 : 600, color:name.toLowerCase().includes("spot")? "#6b7280" : "#162f6e", fontStyle:name.toLowerCase().includes("spot")? "italic" : "normal" }}>{name}</td>
-                  <td style={{ fontSize:12, padding:"8px 0", borderBottom:"1px solid #f9fafb", fontFamily:"'Courier New',monospace", color:"#6b7280" }}>{rate}</td>
-                </tr>
-              ))}
+              ${r.chems.map(c => `<tr><td${c[0].toLowerCase().includes('spot') ? ' class="spot-treat"' : ''}>${c[0]}</td><td>${c[1]}</td></tr>`).join('')}
             </tbody>
           </table>
-          <div style={{ background:"rgba(193,214,47,0.08)", borderLeft:"3px solid #c1d62f", padding:"12px 16px", marginTop:14, borderRadius:"0 6px 6px 0" }}>
-            <div style={{ fontSize:10, fontWeight:800, textTransform:"uppercase", letterSpacing:0.8, color:"#8a9a1a", marginBottom:4 }}>💬 What to tell the customer</div>
-            <p style={{ fontSize:13, color:"#374151", lineHeight:1.65 }}>{round.talk}</p>
+          <div class="customer-talk">
+            <div class="customer-talk-label">What to tell the customer</div>
+            <p>${r.talk}</p>
           </div>
-          {round.yard && (
-            <div style={{ background:"#f0f9ff", borderLeft:"3px solid #3b82f6", padding:"10px 16px", marginTop:10, borderRadius:"0 6px 6px 0" }}>
-              <div style={{ fontSize:10, fontWeight:800, textTransform:"uppercase", letterSpacing:0.8, color:"#2563eb", marginBottom:3 }}>🌱 What's happening in the yard</div>
-              <p style={{ fontSize:12, color:"#1e3a5f", lineHeight:1.55 }}>{round.yard}</p>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const ChemRefTable = ({ title, icon, items }) => (
-  <div style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:8, padding:"18px 20px", boxShadow:"0 1px 3px rgba(0,0,0,0.04)" }}>
-    <h4 style={{ fontSize:14, fontWeight:700, color:"#162f6e", marginBottom:12, display:"flex", alignItems:"center", gap:8 }}>{icon} {title}</h4>
-    <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-      {items.map((item,i) => (
-        <div key={i} style={{ borderBottom: i < items.length-1 ? "1px solid #f3f4f6" : "none", paddingBottom:8 }}>
-          <div style={{ fontSize:13, fontWeight:700, color:"#1f2937" }}>{item.name}</div>
-          <div style={{ fontSize:11, color:"#6b7280", marginTop:2 }}>Used in: {item.where}</div>
-          <div style={{ fontSize:12, color:"#374151", marginTop:2 }}>{item.what}</div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-// ═══════════════════════════════════════════════
-// MAIN APP
-// ═══════════════════════════════════════════════
-
-export default function App() {
-  const [tab, setTab] = useState("safety");
-  const [search, setSearch] = useState("");
-  const [openCards, setOpenCards] = useState({});
-  const [quizMode, setQuizMode] = useState(false);
-  const [quizIndex, setQuizIndex] = useState(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [quizScore, setQuizScore] = useState({ correct:0, total:0 });
-  const [shuffledQuiz, setShuffledQuiz] = useState([]);
-
-  useEffect(() => {
-    setShuffledQuiz([...quizQuestions].sort(() => Math.random() - 0.5));
-  }, [quizMode]);
-
-  const toggleCard = useCallback((id) => {
-    setOpenCards(prev => ({ ...prev, [id]: !prev[id] }));
-  }, []);
-
-  const allRounds = useMemo(() => [
-    ...warmRounds.map(r=>({...r,section:"warm"})),
-    ...coolRounds.map(r=>({...r,section:"cool"})),
-    ...coastalRounds.map(r=>({...r,section:"coastal"})),
-    ...fungicideRounds.map(r=>({...r,section:"fungicide"})),
-    ...shrubRounds.map(r=>({...r,section:"shrub"})),
-  ], []);
-
-  const filteredRounds = useMemo(() => {
-    if (!search.trim()) return null;
-    const q = search.toLowerCase();
-    return allRounds.filter(r => {
-      const text = [r.code, r.name, r.timing, r.type, r.talk, r.yard||"", r.program||"", ...r.chems.flat()].join(" ").toLowerCase();
-      return text.includes(q);
-    });
-  }, [search, allRounds]);
-
-  const isSearching = search.trim().length > 0;
-
-  const tabs = [
-    { id:"safety", label:"Safety & Talk Tracks" },
-    { id:"warm", label:"Warm Season" },
-    { id:"cool", label:"Cool Season" },
-    { id:"coastal", label:"Coastal" },
-    { id:"fungicide", label:"Fungicide" },
-    { id:"shrub", label:"Shrub Care" },
-    { id:"addons", label:"Add-Ons" },
-    { id:"quiz", label:"🧠 Study Mode" },
-  ];
-
-  const getRoundsForTab = (tabId) => {
-    switch(tabId) {
-      case "warm": return warmRounds;
-      case "cool": return coolRounds;
-      case "coastal": return coastalRounds;
-      case "fungicide": return fungicideRounds;
-      case "shrub": return shrubRounds;
-      default: return [];
-    }
-  };
-
-  const sectionTitles = {
-    warm: { title:"Warm Season Program", sub:"Bermuda & Zoysia · 7 rounds · Jan – Dec" },
-    cool: { title:"Cool Season Program", sub:"Fescue · 7 rounds · Jan – Dec" },
-    coastal: { title:"Coastal Program", sub:"Centipede & St. Augustine · 6 rounds · Mar – Nov" },
-    fungicide: { title:"Fungicide Programs", sub:"Preventative disease control · Warm season (3 rounds) + Fescue (5 rounds)" },
-    shrub: { title:"Shrub Care Program", sub:"5 rounds · Mar – Nov · Deep root injection + foliar sprays" },
-  };
-
-  const handleQuizAnswer = (knewIt) => {
-    setQuizScore(prev => ({ correct: prev.correct + (knewIt ? 1 : 0), total: prev.total + 1 }));
-    setShowAnswer(false);
-    setQuizIndex(prev => prev + 1);
-  };
-
-  return (
-    <div style={{ fontFamily:"'Segoe UI','Helvetica Neue',sans-serif", background:"#f7f8fa", minHeight:"100vh" }}>
-      {/* Header */}
-      <div style={{ background:"#162f6e", color:"#fff", padding:"16px 24px", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12 }}>
-        <div style={{ display:"flex", alignItems:"center", gap:14 }}>
-          <h1 style={{ fontSize:18, fontWeight:800, letterSpacing:-0.3 }}>GRASS <span style={{ color:"#c1d62f" }}>NERDS</span></h1>
-          <span style={{ background:"rgba(193,214,47,0.15)", color:"#c1d62f", fontSize:10, fontWeight:700, padding:"3px 10px", borderRadius:20, letterSpacing:0.8, textTransform:"uppercase" }}>2026 Treatment Reference</span>
-        </div>
-        <div style={{ display:"flex", alignItems:"center", gap:8, background:"rgba(255,255,255,0.1)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:6, padding:"6px 12px", width:280, transition:"all 0.2s" }}>
-          <span style={{ color:"rgba(255,255,255,0.5)", fontSize:14 }}>🔍</span>
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search chemicals, rounds, grass types…"
-            style={{ background:"none", border:"none", color:"#fff", fontFamily:"inherit", fontSize:13, width:"100%", outline:"none" }}
-          />
-          {search && <span onClick={() => setSearch("")} style={{ color:"rgba(255,255,255,0.5)", cursor:"pointer", fontSize:16 }}>✕</span>}
         </div>
       </div>
-
-      {/* Tabs */}
-      <div style={{ background:"#fff", borderBottom:"1px solid #e5e7eb", padding:"0 24px", display:"flex", gap:0, overflowX:"auto" }}>
-        {tabs.map(t => (
-          <div
-            key={t.id}
-            onClick={() => { setTab(t.id); setSearch(""); }}
-            style={{
-              padding:"13px 18px",
-              fontSize:13,
-              fontWeight:600,
-              color: tab === t.id && !isSearching ? "#162f6e" : "#6b7280",
-              cursor:"pointer",
-              borderBottom: tab === t.id && !isSearching ? "2.5px solid #c1d62f" : "2.5px solid transparent",
-              whiteSpace:"nowrap",
-              transition:"all 0.15s",
-              userSelect:"none",
-            }}
-          >{t.label}</div>
-        ))}
-      </div>
-
-      {/* Main */}
-      <div style={{ padding:"20px 24px 60px", maxWidth:1100, margin:"0 auto" }}>
-
-        {/* Search Results */}
-        {isSearching && (
-          <div>
-            <div style={{ fontSize:13, color:"#6b7280", marginBottom:16 }}>
-              {filteredRounds.length} result{filteredRounds.length !== 1 ? "s" : ""} for "<strong>{search}</strong>"
-            </div>
-            {filteredRounds.length === 0 && <div style={{ textAlign:"center", padding:"40px 20px", color:"#9ca3af" }}>No matches found. Try a different term.</div>}
-            {filteredRounds.map(r => (
-              <RoundCard key={r.code+r.section} round={r} isOpen={openCards[r.code+r.section]} toggle={() => toggleCard(r.code+r.section)} highlight={true} />
-            ))}
-          </div>
-        )}
-
-        {/* Safety Tab */}
-        {!isSearching && tab === "safety" && (
-          <div>
-            <div style={{ fontSize:20, fontWeight:800, color:"#162f6e", marginBottom:4 }}>Product Safety & Customer Talk Tracks</div>
-            <div style={{ fontSize:13, color:"#6b7280", marginBottom:20 }}>Know this cold. If a customer asks "is this stuff safe?" you should never say "I'm not sure."</div>
-
-            <div style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:8, padding:22, marginBottom:16, boxShadow:"0 1px 3px rgba(0,0,0,0.04)" }}>
-              <h3 style={{ fontSize:16, fontWeight:800, color:"#162f6e", marginBottom:10 }}>The #1 Question: "Do you use Roundup / glyphosate?"</h3>
-              <p style={{ fontSize:14, lineHeight:1.7, color:"#374151" }}>
-                <strong>Answer: No.</strong> Grass Nerds does not use glyphosate (Roundup) in any treatment round. Our weed control products are <span style={{ background:"rgba(193,214,47,0.2)", padding:"1px 5px", borderRadius:3, fontWeight:700 }}>selective herbicides</span> — they target weeds without harming the turf. Glyphosate is a <em>non-selective</em> herbicide that kills everything it touches, which is why we don't use it on lawns.
-              </p>
-              <div style={{ background:"#fef2f2", border:"1px solid #fecaca", borderRadius:6, padding:14, marginTop:14 }}>
-                <p style={{ fontSize:13, color:"#991b1b", lineHeight:1.6 }}>
-                  <strong style={{ color:"#7f1d1d" }}>🚫 Never say:</strong> "I'm not sure what we use" or "Everything is pet safe" without specifics. Customers who ask about glyphosate are informed — vague reassurance makes them trust you <em>less</em>, not more.
-                </p>
-              </div>
-            </div>
-
-            <div style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:8, padding:22, marginBottom:20, boxShadow:"0 1px 3px rgba(0,0,0,0.04)" }}>
-              <h3 style={{ fontSize:16, fontWeight:800, color:"#162f6e", marginBottom:10 }}>Re-Entry & Safety Talk Track</h3>
-              <p style={{ fontSize:13, lineHeight:1.7, color:"#374151", marginBottom:10 }}>When a customer asks "Is it safe for my kids / pets?" — say this:</p>
-              <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                {[
-                  "\"All of our products are labeled safe for residential use, including around children and pets.\"",
-                  "\"We recommend staying off treated areas until the product dries — usually about 30 minutes to an hour depending on conditions.\"",
-                  "\"The surfactant we use can feel a little sticky underfoot if you walk on it before it dries, but once dry there's no issue.\"",
-                  "\"We do NOT use glyphosate or Roundup. Our weed control products are selective herbicides — they target weeds specifically and don't harm the grass.\"",
-                  "\"If you'd like, I can send you a list of the specific products we use on your lawn so you can review them.\"",
-                ].map((line,i) => (
-                  <div key={i} style={{ background:"#f0fdf4", border:"1px solid #bbf7d0", borderRadius:6, padding:"10px 14px", fontSize:13, color:"#166534", lineHeight:1.55, fontWeight:500 }}>
-                    ✅ {line}
-                  </div>
-                ))}
-              </div>
-              <div style={{ background:"#fef2f2", border:"1px solid #fecaca", borderRadius:6, padding:14, marginTop:14 }}>
-                <p style={{ fontSize:13, color:"#991b1b", lineHeight:1.6 }}>
-                  <strong>🚫 Do NOT say:</strong> "It's all pet safe / kid safe" as a blanket statement without specifics. Informed customers hear that as a dodge. Name the product category (selective herbicide, pre-emergent) and the dry-time guideline. Specificity = trust.
-                </p>
-              </div>
-            </div>
-
-            <div style={{ fontSize:18, fontWeight:800, color:"#162f6e", marginBottom:4, marginTop:28 }}>Product Cheat Sheet — By Category</div>
-            <div style={{ fontSize:13, color:"#6b7280", marginBottom:16 }}>Every chemical we use, where it shows up, and what it does.</div>
-
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(340px, 1fr))", gap:14 }}>
-              <ChemRefTable title="Pre-Emergent Herbicides" icon="🛡️" items={safetyData.preEmergents} />
-              <ChemRefTable title="Post-Emergent Herbicides" icon="⚔️" items={safetyData.postEmergents} />
-              <ChemRefTable title="Fertilizers & Soil Amendments" icon="🌿" items={safetyData.fertilizers} />
-              <ChemRefTable title="Fungicides" icon="💊" items={safetyData.fungicides} />
-              <ChemRefTable title="Insecticides" icon="🐛" items={safetyData.insecticides} />
-              <div style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:8, padding:"18px 20px", boxShadow:"0 1px 3px rgba(0,0,0,0.04)" }}>
-                <h4 style={{ fontSize:14, fontWeight:700, color:"#162f6e", marginBottom:12, display:"flex", alignItems:"center", gap:8 }}>💧 Adjuvants & Surfactants</h4>
-                <p style={{ fontSize:13, color:"#374151", lineHeight:1.65 }}>
-                  <strong>Non-Ionic Surfactant</strong> — helps spray stick to leaf surfaces. Used in nearly every liquid round. This is what might feel sticky on bare feet if walked on too soon.
-                </p>
-                <p style={{ fontSize:13, color:"#374151", lineHeight:1.65, marginTop:8 }}>
-                  <strong>Activator Plus</strong> — adjuvant paired with fungicide applications to improve absorption.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Treatment Tabs */}
-        {!isSearching && ["warm","cool","coastal","fungicide","shrub"].includes(tab) && (
-          <div>
-            <div style={{ fontSize:20, fontWeight:800, color:"#162f6e", marginBottom:4 }}>{sectionTitles[tab].title}</div>
-            <div style={{ fontSize:13, color:"#6b7280", marginBottom:20 }}>{sectionTitles[tab].sub}</div>
-            {getRoundsForTab(tab).map(r => (
-              <RoundCard key={r.code} round={r} isOpen={openCards[r.code]} toggle={() => toggleCard(r.code)} highlight={false} />
-            ))}
-          </div>
-        )}
-
-        {/* Add-Ons */}
-        {!isSearching && tab === "addons" && (
-          <div>
-            <div style={{ fontSize:20, fontWeight:800, color:"#162f6e", marginBottom:4 }}>Add-On Services</div>
-            <div style={{ fontSize:13, color:"#6b7280", marginBottom:20 }}>Additional services beyond the core treatment programs</div>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(320px, 1fr))", gap:14 }}>
-              {[
-                { icon:"🧪", title:"Soil Sample", when:"Anytime, once/year", type:"Lab analysis", desc:"Samples from 4–6 spots. Tells us nutrients, deficiencies, and pH balance.", value:"\"Lets us build a custom plan instead of guessing. Better soil = thicker grass, better color, fewer problems.\"" },
-                { icon:"🐛", title:"Grub & Armyworm Prevention", when:"May–Oct (1 app)", type:"Liquid insecticide", desc:"Targets grubs and armyworms at larva stage before they hatch and feed in fall.", value:"\"Protects your lawn from below-ground damage you won't see until it's too late.\"" },
-                { icon:"🌱", title:"Core Aeration (Warm Season)", when:"Jun–Aug", type:"Mechanical", desc:"2–4\" plugs pulled to loosen compacted soil. Leave plugs on lawn to decompose.", value:"\"Lets water, air, and nutrients reach the roots. Stronger roots = thicker, healthier turf.\"" },
-                { icon:"🌱", title:"Aeration + Overseeding (Fescue)", when:"Sep–Oct", type:"Seed", desc:"Aerate + plant new tall fescue seed. Fills thin areas, improves thickness.", value:"\"Fall is the ideal window for fescue seed. Aeration gives perfect seed-to-soil contact.\"" },
-                { icon:"🦟", title:"Mosquito Control", when:"Apr–Oct, every 28–35 days (7 apps)", type:"Fog", desc:"Targets mosquitoes as they hatch. Reduces activity in outdoor spaces.", value:"\"Makes your backyard actually enjoyable again.\"" },
-                { icon:"🔥", title:"Fire Ant Prevention", when:"Anytime, usually Mar–Jun (1 app)", type:"Granular", desc:"Eliminates colonies at the source. Up to 12 months protection. Targets the queen.", value:"\"Works gradually and targets the source — not just the visible ants.\"" },
-                { icon:"🐕", title:"Flea & Tick Prevention", when:"Quarterly (4 apps)", type:"Liquid barrier", desc:"Reduces fleas and ticks in grass and shaded areas. Contact kill + residual prevention.", value:"\"Creates a protective barrier — safer for pets and family.\"" },
-                { icon:"🏠", title:"Perimeter Pest Prevention", when:"Quarterly (4 apps)", type:"Liquid barrier", desc:"Applied around foundation. Stops crawling pests from entering the home.", value:"\"Keeps bugs outside where they belong.\"" },
-                { icon:"🌺", title:"Garden Bed Weed Prevention", when:"Rd 1: Mar–Apr · Rd 2: Sep–Oct", type:"Granular pre-emergent", desc:"Creates a barrier in garden beds to prevent weed seeds from sprouting.", value:"\"Keeps your beds clean without hand-pulling.\"" },
-                { icon:"✂️", title:"Growth Regulator (Bermuda/Zoysia)", when:"Jun, Jul, Aug (3 apps)", type:"Liquid", desc:"Slows top growth, strengthens roots. Denser turf, better color, less mowing.", value:"\"Your lawn looks better AND you mow less. Win-win.\"" },
-              ].map((item,i) => (
-                <div key={i} style={{ background:"#fff", border:"1px solid #e5e7eb", borderRadius:8, padding:"18px 20px", boxShadow:"0 1px 3px rgba(0,0,0,0.04)" }}>
-                  <h4 style={{ fontSize:14, fontWeight:700, color:"#162f6e", marginBottom:10 }}>{item.icon} {item.title}</h4>
-                  <div style={{ fontSize:12, color:"#6b7280", marginBottom:4 }}><strong>When:</strong> {item.when} · <strong>Type:</strong> {item.type}</div>
-                  <p style={{ fontSize:13, color:"#374151", lineHeight:1.55, marginBottom:8 }}>{item.desc}</p>
-                  <div style={{ background:"rgba(193,214,47,0.08)", borderLeft:"3px solid #c1d62f", padding:"8px 12px", borderRadius:"0 6px 6px 0" }}>
-                    <div style={{ fontSize:10, fontWeight:800, textTransform:"uppercase", letterSpacing:0.8, color:"#8a9a1a", marginBottom:2 }}>Customer value line</div>
-                    <p style={{ fontSize:12, color:"#374151", fontStyle:"italic" }}>{item.value}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Quiz / Study Mode */}
-        {!isSearching && tab === "quiz" && (
-          <div>
-            <div style={{ fontSize:20, fontWeight:800, color:"#162f6e", marginBottom:4 }}>Study Mode</div>
-            <div style={{ fontSize:13, color:"#6b7280", marginBottom:20 }}>Flashcard-style questions to test your product knowledge before you get on the phones.</div>
-
-            {!quizMode ? (
-              <div style={{ textAlign:"center", padding:"40px 20px" }}>
-                <div style={{ fontSize:48, marginBottom:16 }}>🧠</div>
-                <p style={{ fontSize:15, color:"#374151", marginBottom:20, maxWidth:400, margin:"0 auto 20px" }}>
-                  {quizQuestions.length} questions covering safety, product knowledge, seasonal timing, and customer scenarios.
-                </p>
-                <button
-                  onClick={() => { setQuizMode(true); setQuizIndex(0); setQuizScore({correct:0,total:0}); setShowAnswer(false); }}
-                  style={{ background:"#162f6e", color:"#fff", border:"none", padding:"12px 32px", borderRadius:8, fontSize:15, fontWeight:700, cursor:"pointer" }}
-                >
-                  Start Flashcards
-                </button>
-              </div>
-            ) : quizIndex >= shuffledQuiz.length ? (
-              <div style={{ textAlign:"center", padding:"40px 20px" }}>
-                <div style={{ fontSize:48, marginBottom:16 }}>🎉</div>
-                <div style={{ fontSize:22, fontWeight:800, color:"#162f6e", marginBottom:8 }}>
-                  {quizScore.correct} / {quizScore.total}
-                </div>
-                <p style={{ fontSize:14, color:"#6b7280", marginBottom:20 }}>
-                  {quizScore.correct === quizScore.total ? "Perfect score. You're ready for the phones." :
-                   quizScore.correct >= quizScore.total * 0.8 ? "Solid. Review the ones you missed." :
-                   "Hit the Safety & Talk Tracks tab and study up, then try again."}
-                </p>
-                <button
-                  onClick={() => { setQuizMode(true); setQuizIndex(0); setQuizScore({correct:0,total:0}); setShowAnswer(false); }}
-                  style={{ background:"#162f6e", color:"#fff", border:"none", padding:"12px 32px", borderRadius:8, fontSize:15, fontWeight:700, cursor:"pointer", marginRight:10 }}
-                >
-                  Try Again
-                </button>
-                <button
-                  onClick={() => setQuizMode(false)}
-                  style={{ background:"#e5e7eb", color:"#374151", border:"none", padding:"12px 32px", borderRadius:8, fontSize:15, fontWeight:600, cursor:"pointer" }}
-                >
-                  Done
-                </button>
-              </div>
-            ) : (
-              <div style={{ maxWidth:600, margin:"0 auto" }}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:16 }}>
-                  <span style={{ fontSize:12, color:"#6b7280", fontWeight:600 }}>Question {quizIndex+1} of {shuffledQuiz.length}</span>
-                  <span style={{ fontSize:11, background:"#f3f4f6", padding:"3px 10px", borderRadius:20, color:"#6b7280", fontWeight:600 }}>{shuffledQuiz[quizIndex].category}</span>
-                </div>
-                <div style={{ background:"#fff", border:"1.5px solid #162f6e", borderRadius:10, padding:28, boxShadow:"0 4px 12px rgba(22,47,110,0.08)" }}>
-                  <p style={{ fontSize:16, fontWeight:700, color:"#162f6e", lineHeight:1.55, marginBottom:20 }}>
-                    {shuffledQuiz[quizIndex].q}
-                  </p>
-                  {!showAnswer ? (
-                    <button
-                      onClick={() => setShowAnswer(true)}
-                      style={{ background:"#c1d62f", color:"#162f6e", border:"none", padding:"10px 28px", borderRadius:6, fontSize:14, fontWeight:700, cursor:"pointer", width:"100%" }}
-                    >
-                      Show Answer
-                    </button>
-                  ) : (
-                    <div>
-                      <div style={{ background:"#f0fdf4", border:"1px solid #bbf7d0", borderRadius:8, padding:16, marginBottom:16 }}>
-                        <p style={{ fontSize:14, color:"#166534", lineHeight:1.65 }}>{shuffledQuiz[quizIndex].a}</p>
-                      </div>
-                      <div style={{ display:"flex", gap:10 }}>
-                        <button
-                          onClick={() => handleQuizAnswer(true)}
-                          style={{ flex:1, background:"#162f6e", color:"#fff", border:"none", padding:"10px 0", borderRadius:6, fontSize:14, fontWeight:700, cursor:"pointer" }}
-                        >
-                          ✅ I knew it
-                        </button>
-                        <button
-                          onClick={() => handleQuizAnswer(false)}
-                          style={{ flex:1, background:"#fef2f2", color:"#991b1b", border:"1px solid #fecaca", padding:"10px 0", borderRadius:6, fontSize:14, fontWeight:700, cursor:"pointer" }}
-                        >
-                          ❌ Need to study
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div style={{ marginTop:16, background:"#f3f4f6", borderRadius:8, height:6, overflow:"hidden" }}>
-                  <div style={{ background:"#c1d62f", height:"100%", width:`${((quizIndex)/shuffledQuiz.length)*100}%`, transition:"width 0.3s", borderRadius:8 }} />
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+    `;
+  }).join('');
 }
 
+renderRounds('warm-rounds', warmRounds);
+renderRounds('cool-rounds', coolRounds);
+renderRounds('coastal-rounds', coastalRounds);
+renderRounds('fungicide-rounds', fungicideRounds);
+renderRounds('shrub-rounds', shrubRounds);
+
+// ===== TABS =====
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('sec-' + tab.dataset.tab).classList.add('active');
+    document.getElementById('search').value = '';
+    showAll();
+  });
+});
+
+// ===== SEARCH =====
+const searchInput = document.getElementById('search');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  if (!q) { showAll(); return; }
+
+  // Show all sections during search
+  document.querySelectorAll('.section').forEach(s => s.style.display = 'block');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+  let found = 0;
+
+  // Search round cards
+  document.querySelectorAll('.round-card').forEach(card => {
+    const text = card.getAttribute('data-searchable') || '';
+    if (text.includes(q)) {
+      card.style.display = '';
+      card.classList.add('highlight');
+      found++;
+    } else {
+      card.style.display = 'none';
+      card.classList.remove('highlight');
+    }
+  });
+
+  // Search quick cards (add-ons)
+  document.querySelectorAll('.quick-card').forEach(card => {
+    const text = (card.getAttribute('data-searchable') || '') + ' ' + card.textContent.toLowerCase();
+    if (text.includes(q)) {
+      card.style.display = '';
+      found++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  // Search safety boxes
+  document.querySelectorAll('.safety-box').forEach(box => {
+    if (box.textContent.toLowerCase().includes(q)) {
+      box.style.display = '';
+      found++;
+    } else {
+      box.style.display = 'none';
+    }
+  });
+
+  document.getElementById('noResults').style.display = found === 0 ? 'block' : 'none';
+});
+
+function showAll() {
+  document.querySelectorAll('.round-card, .quick-card, .safety-box').forEach(el => {
+    el.style.display = '';
+    el.classList.remove('highlight');
+  });
+  document.querySelectorAll('.section').forEach(s => {
+    s.style.display = s.classList.contains('active') ? 'block' : 'none';
+  });
+  document.getElementById('noResults').style.display = 'none';
+}
+</script>
+</body>
+</html>
