@@ -1,0 +1,96 @@
+[
+  {
+    "code": "W1",
+    "name": "Pre-Emergent + Post-Emergent",
+    "timing": "Jan (last wk) – Feb",
+    "type": "Liquid",
+    "chems": [
+      ["Prodiamine Liquid (Resolute 4FL)", "0.75 oz / 1K sq ft"],
+      ["Metsulfuron Methyl (MSM Turf)", "0.00575 oz / 1K sq ft"],
+      ["Escalade 2", "0.75 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"],
+      ["Sim-Trol 4L (temps below 75°F)", "0.75 oz / 1K sq ft"]
+    ],
+    "talk": "Grass is dormant — ideal window for weed prevention. We're putting down a soil barrier to stop spring weeds before they sprout, and knocking out anything already up. No fertilizer this round — just weed control.",
+    "yard": "Dormant, not actively growing. Customer should see fewer weeds emerging over the next several weeks."
+  },
+  {
+    "code": "W2",
+    "name": "Pre-Emergent + Post-Emergent",
+    "timing": "Mar – Apr",
+    "type": "Liquid",
+    "chems": [
+      ["Dimension 2EW (Dithiopyr)", "0.65 oz / 1K sq ft"],
+      ["Negate", "0.035 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Still dormant or just waking up. We're reinforcing the pre-emergent barrier with a second chemistry (rotation prevents resistance) and targeting any grassy weeds that broke through round 1.",
+    "yard": "Dormant to early green-up. Significantly fewer weeds breaking through."
+  },
+  {
+    "code": "W3",
+    "name": "Fertilizer + Spot Treat",
+    "timing": "Apr – May",
+    "type": "Granular",
+    "chems": [
+      ["25-0-12 w/ 85% poly slow-release", "5 lbs / 1K sq ft"],
+      ["Spot treat: Change Up", "0.75 oz / 1 gal water"],
+      ["Spot treat: Pro Sedge", "1 scoop / 1 gal water"]
+    ],
+    "talk": "The grass is coming out of dormancy and greening up. This is a high-quality slow-release fertilizer to fuel that growth. We'll spot-treat any broadleaf weeds or nutsedge we see.",
+    "yard": "Coming out of dormancy, greening up. Deeper green color, thicker turf, stronger growth."
+  },
+  {
+    "code": "W4",
+    "name": "Fertilizer + Spot Treat",
+    "timing": "Jun – Jul",
+    "type": "Granular",
+    "chems": [
+      ["24-0-5 w/ 50% XCU", "5 lbs / 1K sq ft"],
+      ["Spot treat: Celsius", "0.075 oz / 1K sq ft"],
+      ["Spot treat: Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Full green-up, actively growing. Another round of controlled-release fertilizer for density and color. Spot-treating any summer weeds with Celsius, which is specifically designed for warm-season turf.",
+    "yard": "Actively growing, full green-up. Thicker, greener, healthier."
+  },
+  {
+    "code": "W5",
+    "name": "Fertilizer + Post-Emergent",
+    "timing": "Jul – Aug",
+    "type": "Liquid",
+    "chems": [
+      ["25-0-0 w/ Kelp", "6 oz / 1K sq ft"],
+      ["Celsius", "0.070 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"],
+      ["Spot treat: Pro Sedge", "1 scoop / 1 gal water"]
+    ],
+    "talk": "Peak growing season. Liquid fertilizer with kelp for nutrition plus active weed control. Targeting any nutsedge that's popped up in the heat.",
+    "yard": "Actively growing, full green-up. Continued density and color improvement."
+  },
+  {
+    "code": "W6",
+    "name": "Fall Pre-Emergent",
+    "timing": "Aug – Sep",
+    "type": "Granular",
+    "chems": [
+      ["0-0-7 w/ 0.45% Prodiamine granular", "5 lbs / 1K sq ft"],
+      ["Spot treat: Tribute Total", "0.069 oz / 1K sq ft"],
+      ["Spot treat: Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Growth is slowing. We're laying a pre-emergent barrier for winter and spring weeds, plus potassium to help the grass harden off for dormancy. Think of it as winterizing the lawn.",
+    "yard": "Slowing growth. Prevention of winter/spring weeds begins."
+  },
+  {
+    "code": "W7",
+    "name": "Post-Emergent (Winter Cleanup)",
+    "timing": "Nov – Dec",
+    "type": "Liquid",
+    "chems": [
+      ["Cool Power", "1 oz / 1K sq ft"],
+      ["Sim-Trol 4L (temps below 75°F)", "0.75 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Grass is fully dormant. We're cleaning up cool-season weeds so the lawn looks clean and the barrier is reinforced going into winter. Sets up a strong start in spring.",
+    "yard": "Fully dormant. Fewer winter weeds, cleaner dormant lawn."
+  }
+]

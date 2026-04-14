@@ -1,0 +1,92 @@
+[
+  {
+    "code": "F1",
+    "name": "Fertilizer + Iron",
+    "timing": "Jan – Feb",
+    "type": "Granular",
+    "chems": [
+      ["24-0-5 w/ Iron, 50% slow release", "5 lbs / 1K sq ft"],
+      ["Spot treat: Escalade 2", "0.75 oz / 1K sq ft"]
+    ],
+    "talk": "Fescue grows actively in cool weather. This feeds the lawn coming out of winter with slow-release nitrogen and iron for deep green color. We'll spot-treat any broadleaf weeds we see.",
+    "yard": "Actively growing in above-freezing temps. Greener, thicker, healthier."
+  },
+  {
+    "code": "F2",
+    "name": "Pre-Emergent + Post-Emergent + Fertilizer",
+    "timing": "Feb – Mar",
+    "type": "Liquid",
+    "chems": [
+      ["Change Up", "0.75 oz / 1K sq ft"],
+      ["25-0-0 w/ Kelp", "6 oz / 1K sq ft"],
+      ["Prodiamine Liquid (Resolute 4FL)", "0.55 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Active growing season — we're feeding the lawn, putting down a pre-emergent barrier for spring/summer weeds, and killing anything that's already growing. Three things in one visit.",
+    "yard": "Actively growing. Weed prevention for spring/summer. Thicker turf."
+  },
+  {
+    "code": "F3",
+    "name": "Pre-Emergent + Post-Emergent + Fertilizer",
+    "timing": "Apr – May",
+    "type": "Liquid",
+    "chems": [
+      ["Change Up", "0.75 oz / 1K sq ft"],
+      ["25-0-0 w/ Kelp", "6 oz / 1K sq ft"],
+      ["Dithiopyr Liquid (Dimension 2EW)", "0.65 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Reinforcing the pre-emergent with a second chemistry before summer (prevents resistance), continued nutrition, and broadleaf weed control.",
+    "yard": "Active growth continues. Spring/summer weed barrier reinforced."
+  },
+  {
+    "code": "F4",
+    "name": "Soil Health + Post-Emergent",
+    "timing": "Jun – Jul",
+    "type": "Liquid",
+    "chems": [
+      ["Earth Max", "3 oz / 1K sq ft"],
+      ["Change Up", "0.75 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant (Sticker)", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Fescue slows down in summer heat — this is its stressful period. Earth Max supports soil biology and stress tolerance. We're still managing weeds to reduce competition for the grass.",
+    "yard": "Slowing growth. Nutrition to sustain through summer heat stress."
+  },
+  {
+    "code": "F5",
+    "name": "Fertilizer + Lime (Post-Seeding)",
+    "timing": "Aug – Oct",
+    "type": "Granular",
+    "chems": [
+      ["8-14-4 w/ Lime", "5 lbs / 1K sq ft"]
+    ],
+    "talk": "After overseeding, this phosphorus-heavy fertilizer with lime feeds new seed and adjusts soil pH. Phosphorus promotes root establishment — exactly what baby grass needs.",
+    "yard": "New grass is planted. Nutrition promotes new growth and establishment."
+  },
+  {
+    "code": "F6",
+    "name": "Fertilizer + Iron",
+    "timing": "Oct – Nov",
+    "type": "Granular",
+    "chems": [
+      ["24-0-4 w/ Iron, 50% slow release", "5 lbs / 1K sq ft"],
+      ["Spot treat: Tenacity", "0.14 oz / 1K sq ft"],
+      ["Spot treat: Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Fall is fescue's prime growing season. Another round of slow-release nutrition with iron for thickness and color. Spot-treating weeds with Tenacity, which is excellent for fall fescue.",
+    "yard": "Actively growing. Prime season for thickening and recovery."
+  },
+  {
+    "code": "F7",
+    "name": "Post-Emergent + Fertilizer",
+    "timing": "Nov – Dec",
+    "type": "Liquid",
+    "chems": [
+      ["25-0-0 w/ Kelp", "9 oz / 1K sq ft"],
+      ["Escalade 2", "0.75 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Growth is slowing — we're cleaning up winter broadleaf weeds and giving a last nutrition push. Highest kelp rate of the year to carry the lawn through winter.",
+    "yard": "Slowing growth. Weed control for winter/spring weeds applied."
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "code": "WFP1", "name": "Warm Season Fungicide Rd 1", "timing": "Apr – May", "type": "Liquid", "program": "Bermuda / Zoysia / Centipede / St. Aug",
+    "chems": [["Propiconazole 41.8", "0.75 oz / 1K sq ft"], ["Activator Plus", "0.25 oz / 1K sq ft"], ["25-0-0 w/ Kelp", "3 oz / 1K sq ft"]],
+    "talk": "Grass is coming out of dormancy — weakened turf is vulnerable to disease during green-up. This prevents fungus before it starts and includes nutrition.",
+    "yard": "Green-up phase. Weaker grass susceptible to disease."
+  },
+  {
+    "code": "WFP2", "name": "Warm Season Fungicide Rd 2", "timing": "Jun – Jul", "type": "Liquid", "program": "Bermuda / Zoysia / Centipede / St. Aug",
+    "chems": [["Xzemplar", "0.26 oz / 1K sq ft"], ["Activator Plus", "0.25 oz / 1K sq ft"], ["25-0-0 w/ Kelp", "5 oz / 1K sq ft"]],
+    "talk": "Peak heat and moisture — prime conditions for disease. We rotate to a different fungicide chemistry to prevent resistance. Higher fertilizer rate this round.",
+    "yard": "Fully growing. Heat stress and moisture create disease risk."
+  },
+  {
+    "code": "WFP3", "name": "Warm Season Fungicide Rd 3", "timing": "Aug", "type": "Liquid", "program": "Bermuda / Zoysia / Centipede / St. Aug",
+    "chems": [["Propiconazole 41.8", "0.75 oz / 1K sq ft"], ["Activator Plus", "0.25 oz / 1K sq ft"]],
+    "talk": "Heading into dormancy. Moisture doesn't absorb as fast, creating fungal risk with cooler temps. Last preventative round of the season.",
+    "yard": "Going dormant. Slower moisture absorption = fungal risk."
+  },
+  {
+    "code": "PF1", "name": "Fescue Fungicide Rd 1", "timing": "Apr", "type": "Liquid", "program": "Fescue",
+    "chems": [["Propiconazole 41.8", "0.75 oz / 1K sq ft"], ["Activator Plus", "0.25 oz / 1K sq ft"], ["25-0-0 w/ Kelp", "6 oz / 1K sq ft"]],
+    "talk": "Starting preventative disease program before summer stress hits fescue. Includes nutrition to support the grass through the transition.",
+    "yard": "Approaching summer stress period."
+  },
+  {
+    "code": "PF2", "name": "Fescue Fungicide Rd 2", "timing": "May", "type": "Liquid", "program": "Fescue",
+    "chems": [["Azoxystrobin (Azoxy)", "0.75 oz / 1K sq ft"], ["Activator Plus", "0.25 oz / 1K sq ft"], ["Earth Max", "3 oz / 1K sq ft"]],
+    "talk": "Rotated to a strobilurin fungicide (different mode of action). Earth Max supports soil health during increasing heat.",
+    "yard": "Heat and humidity increasing. Disease pressure building."
+  },
+  {
+    "code": "PF3", "name": "Fescue Fungicide Rd 3", "timing": "Jun", "type": "Liquid", "program": "Fescue",
+    "chems": [["Azoxystrobin (Azoxy)", "0.75 oz / 1K sq ft"], ["Activator Plus", "0.25 oz / 1K sq ft"], ["Earth Max", "3 oz / 1K sq ft"]],
+    "talk": "Continued prevention through the highest-risk period. Heat and humidity are the biggest drivers of fescue disease. Staying on schedule is critical.",
+    "yard": "High stress. Peak disease pressure."
+  },
+  {
+    "code": "PF4", "name": "Fescue Fungicide Rd 4", "timing": "Jul", "type": "Liquid", "program": "Fescue",
+    "chems": [["Azoxystrobin (Azoxy)", "0.75 oz / 1K sq ft"], ["Activator Plus", "0.25 oz / 1K sq ft"], ["Earth Max", "3 oz / 1K sq ft"]],
+    "talk": "Peak summer stress — fescue is most vulnerable right now. Missing this round is when we see the biggest disease losses.",
+    "yard": "Maximum stress. Most vulnerable period."
+  },
+  {
+    "code": "PF5", "name": "Fescue Fungicide Rd 5", "timing": "Aug", "type": "Liquid", "program": "Fescue",
+    "chems": [["Propiconazole 41.8", "0.75 oz / 1K sq ft"], ["Earth Max", "3 oz / 1K sq ft"]],
+    "talk": "Final preventative round before fall recovery. Rotated back to Propiconazole. Heat is breaking and fescue will start bouncing back.",
+    "yard": "Heat breaking. Transition to fall recovery."
+  }
+]

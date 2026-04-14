@@ -1,0 +1,80 @@
+[
+  {
+    "code": "C1",
+    "name": "Pre-Emergent + Post-Emergent",
+    "timing": "Mar",
+    "type": "Liquid",
+    "chems": [
+      ["Prodiamine Liquid (Resolute 4FL)", "0.375 oz / 1K sq ft"],
+      ["Metsulfuron Methyl (MSM Turf)", "0.00575 oz / 1K sq ft"],
+      ["Change Up", "0.75 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Centipede and St. Augustine are dormant. Pre-emergent barrier plus broadleaf weed control. Note: lower Prodiamine rate than Bermuda — these grasses are more sensitive to pre-emergents.",
+    "yard": "Dormant. Ideal time for weed prevention and soil conditioning."
+  },
+  {
+    "code": "C2",
+    "name": "Pre-Emergent + Post-Emergent",
+    "timing": "Apr",
+    "type": "Liquid",
+    "chems": [
+      ["Dithiopyr Liquid (Dimension 2EW)", "0.65 oz / 1K sq ft"],
+      ["Metsulfuron Methyl (MSM Turf)", "0.000575 oz / 1K sq ft"],
+      ["Change Up", "0.75 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Coming out of dormancy, starting to green up. Second pre-emergent chemistry plus continued broadleaf control.",
+    "yard": "Greening up. Fewer weeds breaking through."
+  },
+  {
+    "code": "C3",
+    "name": "Fertilizer + Spot Treat",
+    "timing": "May",
+    "type": "Granular",
+    "chems": [
+      ["24-0-5 w/ Iron, 50% slow release", "5 lbs / 1K sq ft"],
+      ["Spot treat: Celsius", "0.075 oz / 1K sq ft"]
+    ],
+    "talk": "Full green-up and active growth. Feeding the lawn with slow-release nitrogen plus iron for color and density. Spot-treating any weeds that got through.",
+    "yard": "Actively growing, full green-up. Deeper color, thicker turf."
+  },
+  {
+    "code": "C4",
+    "name": "Soil Health + Post-Emergent",
+    "timing": "Jun",
+    "type": "Liquid",
+    "chems": [
+      ["Earth Max", "3 oz / 1K sq ft"],
+      ["Celsius", "0.070 oz / 1K sq ft"],
+      ["Non-Ionic Surfactant", "0.25 oz / 1K sq ft"]
+    ],
+    "talk": "Active growing season. Earth Max for soil biology plus Celsius for summer weed pressure. These grasses are thriving right now.",
+    "yard": "Actively growing. Continued density and health improvement."
+  },
+  {
+    "code": "C5",
+    "name": "Fall Pre-Emergent",
+    "timing": "Sep",
+    "type": "Granular",
+    "chems": [
+      ["0-0-7 w/ 0.45% Prodiamine granular", "5 lbs / 1K sq ft"],
+      ["Spot treat: C4 mix if needed", "—"]
+    ],
+    "talk": "Growth slowing down. Pre-emergent barrier for winter/spring weeds plus potassium for stress tolerance going into dormancy.",
+    "yard": "Slowing growth. Winter/spring weed prevention begins."
+  },
+  {
+    "code": "C6",
+    "name": "Post-Emergent + Stress Relief",
+    "timing": "Nov",
+    "type": "Liquid",
+    "chems": [
+      ["Sim-Trol 4L (temps below 75°F)", "0.75 oz / 1K sq ft"],
+      ["Change Up", "0.75 oz / 1K sq ft"],
+      ["Harrell's Stress Relief 0-0-25", "3 oz / 1K sq ft"]
+    ],
+    "talk": "Fully dormant. Cleaning up cool-season weeds and applying high-potassium stress relief for winter hardiness. Sets up a clean start in spring.",
+    "yard": "Fully dormant. Winter weed prevention. Stress protection."
+  }
+]

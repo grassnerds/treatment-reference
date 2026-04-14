@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Is your stuff safe for my kids and pets?",
+    "answer": "Everything we apply is registered with the EPA and goes through the same regulatory process as the household cleaners and chemicals you already have under your kitchen sink. The EPA evaluates these products specifically for residential use around people, children, and pets. We recommend staying off treated areas until the product dries — usually 30 minutes to an hour depending on conditions. The surfactant we use can feel a little sticky underfoot if you walk on it before it's dry, but once it's dry there's no issue."
+  },
+  {
+    "question": "What are you putting on my lawn?",
+    "answer": "Every round uses a specific combination of EPA-registered products tailored to the time of year and what your grass needs. Depending on the visit, that could include a pre-emergent to prevent weeds from sprouting, a selective herbicide to kill active weeds, a fertilizer to feed the grass, or a fungicide to prevent disease. I can tell you exactly what's in your next round right now, or I can send you the full list for every round if you want to review them."
+  },
+  {
+    "question": "How long do I need to keep my dog off the lawn after treatment?",
+    "answer": "Until the product dries — typically 30 minutes to an hour. Once it's dry, it's safe for pets. If your dog walks on it while it's still wet, it's not harmful, but the surfactant can feel sticky on their paws. You can rinse their paws with water if that happens."
+  },
+  {
+    "question": "Do you use Roundup or glyphosate?",
+    "answer": "No. We do not use glyphosate in any treatment round. Our weed control products are selective herbicides — they target weeds without harming the turf. Glyphosate is a non-selective herbicide that kills everything it touches, which is why we don't use it on lawns."
+  },
+  {
+    "question": "Why does my lawn still have weeds after treatment?",
+    "answer": "Weed control isn't instant — post-emergent herbicides typically take 7 to 14 days to fully kill active weeds. Pre-emergent products prevent future weeds from sprouting but don't kill what's already growing. The program works cumulatively — each round builds on the last. If you're between rounds 1 and 3, you're still in the early stages and results will continue to improve."
+  },
+  {
+    "question": "Can you send me a list of the chemicals you use?",
+    "answer": "Absolutely. I can email you a breakdown of what's in each round for your specific grass type. Everything we use is EPA-registered for residential application, the same way your household cleaning products are. We're happy to be completely transparent about it."
+  },
+  {
+    "question": "My neighbor uses a different company and their lawn looks better. Why?",
+    "answer": "Every lawn is different — soil conditions, grass type, sun exposure, irrigation, and how long they've been on a program all play a role. Most customers see significant improvement by rounds 3 through 5. If you've been on the program less than a full cycle, the best results are still ahead. If there's a specific concern, we can have our horticulture manager take a look."
+  },
+  {
+    "question": "You put granular fertilizer down — is that safe to walk on? What about my kids picking it up?",
+    "answer": "Granular fertilizer is safe once it's been watered in or after the next rainfall. We recommend running your irrigation after a granular application to dissolve the granules into the soil — that activates the product and gets it to the root zone where it actually works. Once it's watered in, there's nothing sitting on the surface to worry about. If it hasn't rained or been watered yet, just keep kids and pets from playing directly in the granules. Same common sense as any lawn and garden product you'd buy at the hardware store."
+  },
+  {
+    "question": "Is the fertilizer and the weed control the same product?",
+    "answer": "No — they're separate products that we often apply in the same visit. The fertilizer feeds the grass with nutrients like nitrogen, potassium, and iron. The weed control is a selective herbicide that targets weeds without harming the turf. They work together because a well-fed lawn crowds out weeds, and killing weeds gives the grass more room to grow."
+  },
+  {
+    "question": "Do you offer an organic or natural option?",
+    "answer": "We get this question a lot, and here's the honest answer: the terms \"organic\" and \"natural\" in lawn care are largely marketing language — they aren't regulated the way those terms are in the food industry. Many so-called natural products still contain chemicals, and some are actually less effective and require more frequent application, which means more product on your lawn overall. Everything we use is EPA-registered and evaluated for residential safety around families and pets — that's the standard that actually matters. Our program is designed to use the right product at the right rate at the right time, which means we're putting down less total product than a \"natural\" program that needs to be reapplied constantly."
+  }
+]

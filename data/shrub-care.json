@@ -1,0 +1,32 @@
+[
+  {
+    "code": "SC1", "name": "Deep Root Injection", "timing": "Mar", "type": "Liquid",
+    "chems": [["Enclave", "32 oz / 100 gal"], ["Triple Crown / Merit", "8 oz / 100 gal"], ["Earth Max", "32 oz / 100 gal"], ["25-0-0 w/ Kelp", "128 oz / 100 gal"]],
+    "talk": "Shrubs are transitioning from slow growth to bloom. Deep root injection delivers nutrition, fungus prevention, and insect control directly to the root zone — more effective than surface spraying for the first round.",
+    "yard": "Shrubs beginning to bloom."
+  },
+  {
+    "code": "SC2", "name": "Foliar Spray", "timing": "Apr – May", "type": "Liquid",
+    "chems": [["Altus", "8 oz / 100 gal"], ["Enclave", "32 oz / 100 gal"], ["Harrell's Max Minors", "32 oz / 100 gal"], ["Earth Max", "64 oz / 100 gal"]],
+    "talk": "Shrubs actively growing and blooming. Foliar spray covers nutrition, disease prevention, and insect control. Max Minors provides trace micronutrients.",
+    "yard": "Actively growing and blooming."
+  },
+  {
+    "code": "SC3", "name": "Foliar Spray", "timing": "Jun – Jul", "type": "Liquid",
+    "chems": [["Enclave", "32 oz / 100 gal"], ["Altus", "8 oz / 100 gal"], ["Harrell's Max Minors", "32 oz / 100 gal"], ["Earth Max", "64 oz / 100 gal"]],
+    "talk": "Mid-season maintenance. Continued protection during peak growing and blooming. Same formulation as SC2.",
+    "yard": "Peak growing and blooming."
+  },
+  {
+    "code": "SC4", "name": "Foliar Spray", "timing": "Aug – Sep", "type": "Liquid",
+    "chems": [["Enclave", "32 oz / 100 gal"], ["Triple Crown", "8 oz / 100 gal"], ["Earth Max", "64 oz / 100 gal"], ["Harrell's Max Cal", "64 oz / 100 gal"]],
+    "talk": "Late-season spray. Switched from Altus back to Triple Crown for insect rotation, and added calcium supplement for cell wall strength heading into fall.",
+    "yard": "Late season. Preparing for dormancy."
+  },
+  {
+    "code": "SC5", "name": "Foliar Spray", "timing": "Oct – Nov", "type": "Liquid",
+    "chems": [["Ultra-Fine Spray Oil", "64 oz / 100 gal"], ["Enclave", "32 oz / 100 gal"], ["Earth Max", "64 oz / 100 gal"]],
+    "talk": "Final round. Horticultural oil smothers overwintering insects and eggs. Disease prevention continues. Sets up clean start for spring.",
+    "yard": "Going dormant. Overwintering pest prevention."
+  }
+]
